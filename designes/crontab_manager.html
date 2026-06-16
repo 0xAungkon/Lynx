@@ -1,0 +1,579 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Crontab Management - Lynx System Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1e2e; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #424750; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8d919b; 
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "background": "#121221",
+                    "tertiary": "#a1dd9c",
+                    "tertiary-fixed-dim": "#99d595",
+                    "surface": "#121221",
+                    "on-primary": "#003062",
+                    "on-error-container": "#ffdad6",
+                    "surface-dim": "#121221",
+                    "secondary-fixed-dim": "#c5c4dc",
+                    "on-tertiary-fixed": "#002205",
+                    "error-container": "#93000a",
+                    "on-secondary-fixed-variant": "#444558",
+                    "on-primary-fixed": "#001b3c",
+                    "on-error": "#690005",
+                    "tertiary-fixed": "#b4f2af",
+                    "error": "#ffb4ab",
+                    "surface-bright": "#383849",
+                    "primary-container": "#89b4fa",
+                    "on-primary-container": "#094583",
+                    "secondary-fixed": "#e1e0f8",
+                    "primary-fixed-dim": "#a8c8ff",
+                    "on-secondary-container": "#b4b3ca",
+                    "inverse-on-surface": "#2f2f40",
+                    "on-surface": "#e3e0f7",
+                    "surface-container-high": "#292839",
+                    "on-tertiary-fixed-variant": "#19511f",
+                    "on-tertiary-container": "#174f1e",
+                    "on-surface-variant": "#c3c6d2",
+                    "inverse-primary": "#305f9f",
+                    "surface-container": "#1e1e2e",
+                    "secondary-container": "#444558",
+                    "on-primary-fixed-variant": "#0e4685",
+                    "surface-tint": "#a8c8ff",
+                    "inverse-surface": "#e3e0f7",
+                    "tertiary-container": "#86c182",
+                    "primary": "#b5cfff",
+                    "surface-container-lowest": "#0d0d1c",
+                    "outline": "#8d919b",
+                    "on-secondary-fixed": "#191a2b",
+                    "on-secondary": "#2e2f41",
+                    "on-background": "#e3e0f7",
+                    "surface-variant": "#333344",
+                    "surface-container-highest": "#333344",
+                    "secondary": "#c5c4dc",
+                    "on-tertiary": "#00390c",
+                    "surface-container-low": "#1a1a2a",
+                    "primary-fixed": "#d5e3ff",
+                    "outline-variant": "#424750"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sidebar_width": "72px",
+                    "container_padding": "24px",
+                    "card_padding": "20px",
+                    "stack_gap": "8px",
+                    "grid_gutter": "16px"
+            },
+            "fontFamily": {
+                    "label-caps": [
+                            "Inter"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "title-sm": [
+                            "Inter"
+                    ],
+                    "code-terminal": [
+                            "JetBrains Mono"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "data-mono": [
+                            "JetBrains Mono"
+                    ]
+            },
+            "fontSize": {
+                    "label-caps": [
+                            "11px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "display-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "title-sm": [
+                            "18px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "code-terminal": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "data-mono": [
+                            "13px",
+                            {
+                                    "lineHeight": "18px",
+                                    "fontWeight": "500"
+                            }
+                    ]
+            }
+          },
+        }
+      }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen overflow-x-hidden font-body-md text-body-md">
+<!-- TopAppBar -->
+<nav class="bg-background dark:bg-background text-primary dark:text-primary font-title-sm text-title-sm fixed top-0 right-0 left-[72px] h-16 bg-background flat no shadows flex justify-between items-center px-container_padding w-full z-40 border-b border-outline-variant/30 backdrop-blur-md bg-background/80">
+<div class="flex items-center space-x-4">
+<span class="font-headline-md text-headline-md text-primary">Lynx</span>
+<div class="h-6 w-px bg-outline-variant"></div>
+<span class="text-on-surface-variant font-title-sm text-title-sm">Crontab Management</span>
+</div>
+<div class="flex items-center space-x-6">
+<div class="relative hidden md:block focus-within:ring-1 focus-within:ring-primary rounded-full bg-surface-container-high px-4 py-2 flex items-center w-64 border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px] mr-2">search</span>
+<input class="bg-transparent border-none focus:outline-none focus:ring-0 text-on-surface w-full placeholder-on-surface-variant/50 text-body-md font-body-md py-0" placeholder="Search tasks..." type="text">
+</div>
+<div class="flex items-center space-x-4">
+<button class="text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-full hover:bg-surface-variant">
+<span class="material-symbols-outlined" data-icon="refresh">refresh</span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors p-2 rounded-full hover:bg-surface-variant relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors p-1 rounded-full hover:bg-surface-variant border border-outline-variant">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="bg-surface dark:bg-surface text-primary dark:text-primary font-label-caps text-label-caps fixed left-0 top-0 h-full w-[72px] border-r border-outline-variant flat no shadows transition-all duration-200 ease-in-out flex flex-col items-center py-stack_gap z-50">
+<div class="mb-8 mt-2">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center text-on-primary-container font-headline-md text-headline-md">
+                L
+            </div>
+</div>
+<nav class="flex flex-col space-y-2 w-full px-2">
+<a class="w-full aspect-square rounded-xl flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out group relative" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="dashboard">dashboard</span>
+<span class="text-[9px] opacity-0 group-hover:opacity-100 absolute -bottom-1 transition-opacity">Dash</span>
+</a>
+<a class="w-full aspect-square rounded-xl flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out group relative" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="memory">memory</span>
+<span class="text-[9px] opacity-0 group-hover:opacity-100 absolute -bottom-1 transition-opacity">CPU</span>
+</a>
+<a class="w-full aspect-square rounded-xl flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out group relative" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="videogame_asset">videogame_asset</span>
+<span class="text-[9px] opacity-0 group-hover:opacity-100 absolute -bottom-1 transition-opacity">GPU</span>
+</a>
+<a class="w-full aspect-square rounded-xl flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out group relative" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="sd_card">sd_card</span>
+<span class="text-[9px] opacity-0 group-hover:opacity-100 absolute -bottom-1 transition-opacity">MEM</span>
+</a>
+<a class="w-full aspect-square rounded-xl flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out group relative" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="storage">storage</span>
+<span class="text-[9px] opacity-0 group-hover:opacity-100 absolute -bottom-1 transition-opacity">Disk</span>
+</a>
+<a class="w-full aspect-square rounded-xl flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out group relative" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="lan">lan</span>
+<span class="text-[9px] opacity-0 group-hover:opacity-100 absolute -bottom-1 transition-opacity">Net</span>
+</a>
+<a class="w-full aspect-square rounded-xl flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out group relative" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="account_tree">account_tree</span>
+<span class="text-[9px] opacity-0 group-hover:opacity-100 absolute -bottom-1 transition-opacity">Proc</span>
+</a>
+<a class="w-full aspect-square rounded-xl flex flex-col items-center justify-center text-primary border-l-2 border-primary bg-primary-container/10 transition-all duration-200 ease-in-out group relative" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="description">description</span>
+<span class="text-[9px] opacity-100 absolute -bottom-1">Jobs</span>
+</a>
+<a class="w-full aspect-square rounded-xl flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out group relative" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="package">package</span>
+<span class="text-[9px] opacity-0 group-hover:opacity-100 absolute -bottom-1 transition-opacity">Pkgs</span>
+</a>
+<a class="w-full aspect-square rounded-xl flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out group relative" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="settings_suggest">settings_suggest</span>
+<span class="text-[9px] opacity-0 group-hover:opacity-100 absolute -bottom-1 transition-opacity">Svcs</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col space-y-2 w-full px-2 mb-4">
+<a class="w-full aspect-square rounded-xl flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out group relative" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="auto_fix_high">auto_fix_high</span>
+</a>
+<a class="w-full aspect-square rounded-xl flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out group relative" href="#">
+<span class="material-symbols-outlined text-[24px] mb-1" data-icon="settings">settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-[72px] mt-16 p-container_padding flex flex-col gap-grid_gutter lg:flex-row h-[calc(100vh-64px)] overflow-hidden">
+<!-- Left Content Area (Grid & Table) -->
+<div class="flex-1 flex flex-col gap-grid_gutter overflow-y-auto pr-2 pb-8">
+<!-- Hero Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-grid_gutter shrink-0">
+<!-- Active Jobs -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="flex justify-between items-start mb-4 relative z-10">
+<div class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Active Jobs</div>
+<span class="material-symbols-outlined text-primary">play_circle</span>
+</div>
+<div class="font-display-lg text-display-lg text-on-surface relative z-10">24</div>
+<div class="font-body-md text-body-md text-tertiary mt-2 flex items-center relative z-10">
+<span class="material-symbols-outlined text-[16px] mr-1">trending_up</span> +3 this week
+                    </div>
+</div>
+<!-- Next Scheduled -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-tertiary/5 rounded-full blur-xl group-hover:bg-tertiary/10 transition-colors"></div>
+<div class="flex justify-between items-start mb-4 relative z-10">
+<div class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Next Scheduled</div>
+<span class="material-symbols-outlined text-tertiary">schedule</span>
+</div>
+<div class="font-display-lg text-display-lg text-on-surface relative z-10">14m 22s</div>
+<div class="font-code-terminal text-code-terminal text-on-surface-variant mt-2 truncate relative z-10">
+                        /usr/local/bin/backup.sh
+                    </div>
+</div>
+<!-- Failed Tasks -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-error/5 rounded-full blur-xl group-hover:bg-error/10 transition-colors"></div>
+<div class="flex justify-between items-start mb-4 relative z-10">
+<div class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Failed (24h)</div>
+<span class="material-symbols-outlined text-error">error</span>
+</div>
+<div class="font-display-lg text-display-lg text-error relative z-10">2</div>
+<div class="font-body-md text-body-md text-on-surface-variant mt-2 flex items-center relative z-10">
+                        Requires attention
+                    </div>
+</div>
+<!-- Last Execution -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-surface-variant/50 rounded-full blur-xl group-hover:bg-surface-variant transition-colors"></div>
+<div class="flex justify-between items-start mb-4 relative z-10">
+<div class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Last Execution</div>
+<span class="material-symbols-outlined text-on-surface-variant">history</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface relative z-10 mt-1">10:45:00 AM</div>
+<div class="font-body-md text-body-md text-tertiary mt-2 flex items-center relative z-10">
+<span class="material-symbols-outlined text-[16px] mr-1">check_circle</span> Success
+                    </div>
+</div>
+</div>
+<!-- Crontab Registry Table -->
+<div class="bg-surface-container border border-outline-variant rounded-xl flex-1 flex flex-col overflow-hidden min-h-[400px]">
+<div class="p-card_padding border-b border-outline-variant flex justify-between items-center bg-surface-container-high/50">
+<h2 class="font-title-sm text-title-sm text-on-surface flex items-center">
+<span class="material-symbols-outlined mr-2 text-primary">list_alt</span>
+                        Crontab Registry
+                    </h2>
+<div class="flex gap-2">
+<button class="bg-surface-variant text-on-surface font-body-md text-body-md px-4 py-2 rounded-lg border border-outline-variant hover:bg-surface-container-highest transition-colors flex items-center">
+<span class="material-symbols-outlined mr-2 text-[18px]">filter_list</span> Filter
+                        </button>
+<button class="bg-primary text-on-primary font-body-md text-body-md px-4 py-2 rounded-lg hover:bg-primary-fixed transition-colors flex items-center font-medium">
+<span class="material-symbols-outlined mr-2 text-[18px]">add</span> New Job
+                        </button>
+</div>
+</div>
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant">
+<tr>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant uppercase w-16 text-center">Status</th><th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant uppercase w-24">User</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant uppercase">Job Command</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant uppercase w-48">Schedule</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant uppercase w-32">Next Run</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant uppercase w-40">Last Run</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant uppercase w-24 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/50">
+<!-- Row 1: Selected -->
+<tr class="bg-primary/10 hover:bg-primary/20 transition-colors cursor-pointer border-l-2 border-primary">
+<td class="py-3 px-4 text-center">
+<div class="w-8 h-4 bg-tertiary rounded-full relative inline-block align-middle cursor-pointer">
+<div class="w-3 h-3 bg-surface rounded-full absolute top-[2px] right-[2px]"></div>
+</div>
+</td><td class="py-3 px-4 font-data-mono text-data-mono text-on-surface">root</td>
+<td class="py-3 px-4">
+<div class="font-data-mono text-data-mono text-primary truncate max-w-xs">/opt/scripts/db_backup.sh</div>
+<div class="font-body-md text-[12px] text-on-surface-variant mt-1">Postgres Daily Backup</div>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<span class="bg-surface-variant px-2 py-1 rounded font-code-terminal text-code-terminal text-on-surface">0 2 * * *</span>
+</div>
+<div class="font-body-md text-[12px] text-on-surface-variant mt-1">Every day at 02:00</div>
+</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-on-surface">14h 22m</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-[16px]">check_circle</span>
+<span class="font-data-mono text-data-mono text-on-surface">02:00:01</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end gap-1">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Run Now"><span class="material-symbols-outlined text-[20px]">play_arrow</span></button>
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-variant/50 transition-colors cursor-pointer border-l-2 border-transparent">
+<td class="py-3 px-4 text-center">
+<div class="w-8 h-4 bg-tertiary rounded-full relative inline-block align-middle cursor-pointer">
+<div class="w-3 h-3 bg-surface rounded-full absolute top-[2px] right-[2px]"></div>
+</div>
+</td><td class="py-3 px-4 font-data-mono text-data-mono text-on-surface">admin</td>
+<td class="py-3 px-4">
+<div class="font-data-mono text-data-mono text-on-surface truncate max-w-xs">certbot renew --quiet</div>
+<div class="font-body-md text-[12px] text-on-surface-variant mt-1">SSL Certificate Renewal</div>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<span class="bg-surface-variant px-2 py-1 rounded font-code-terminal text-code-terminal text-on-surface">0 0 1 * *</span>
+</div>
+<div class="font-body-md text-[12px] text-on-surface-variant mt-1">1st of every month</div>
+</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-on-surface">12d 4h</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-[16px]">check_circle</span>
+<span class="font-data-mono text-data-mono text-on-surface">Oct 1</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end gap-1">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Run Now"><span class="material-symbols-outlined text-[20px]">play_arrow</span></button>
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Error -->
+<tr class="hover:bg-error/5 transition-colors cursor-pointer border-l-2 border-transparent">
+<td class="py-3 px-4 text-center">
+<div class="w-8 h-4 bg-tertiary rounded-full relative inline-block align-middle cursor-pointer">
+<div class="w-3 h-3 bg-surface rounded-full absolute top-[2px] right-[2px]"></div>
+</div>
+</td><td class="py-3 px-4 font-data-mono text-data-mono text-on-surface">www-data</td>
+<td class="py-3 px-4">
+<div class="font-data-mono text-data-mono text-error truncate max-w-xs">/usr/bin/sync_logs.py</div>
+<div class="font-body-md text-[12px] text-on-surface-variant mt-1">Remote Log Sync</div>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<span class="bg-surface-variant px-2 py-1 rounded font-code-terminal text-code-terminal text-on-surface">*/15 * * * *</span>
+</div>
+<div class="font-body-md text-[12px] text-on-surface-variant mt-1">Every 15 minutes</div>
+</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-on-surface">2m 10s</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-[16px]">error</span>
+<span class="font-data-mono text-data-mono text-on-surface">10:45:00</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end gap-1">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Run Now"><span class="material-symbols-outlined text-[20px]">play_arrow</span></button>
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Inactive -->
+<tr class="hover:bg-surface-variant/50 transition-colors cursor-pointer border-l-2 border-transparent opacity-60">
+<td class="py-3 px-4 text-center">
+<div class="w-8 h-4 bg-surface-variant border border-outline rounded-full relative inline-block align-middle cursor-pointer">
+<div class="w-3 h-3 bg-outline rounded-full absolute top-[1px] left-[2px]"></div>
+</div>
+</td><td class="py-3 px-4 font-data-mono text-data-mono text-on-surface">user</td>
+<td class="py-3 px-4">
+<div class="font-data-mono text-data-mono text-on-surface truncate max-w-xs">rm -rf /tmp/cache/*</div>
+<div class="font-body-md text-[12px] text-on-surface-variant mt-1">Temp Cleanup</div>
+</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<span class="bg-surface-container px-2 py-1 rounded font-code-terminal text-code-terminal text-on-surface-variant">0 4 * * 0</span>
+</div>
+<div class="font-body-md text-[12px] text-on-surface-variant mt-1">Every Sunday at 04:00</div>
+</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-on-surface-variant">-</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">remove</span>
+<span class="font-data-mono text-data-mono">Never</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end gap-1">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" disabled="" title="Run Now"><span class="material-symbols-outlined text-[20px]">play_arrow</span></button>
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Right Sidebar (Inspector) -->
+<aside class="w-full lg:w-96 bg-surface-container border border-outline-variant rounded-xl flex flex-col shrink-0 overflow-hidden h-full">
+<div class="p-card_padding border-b border-outline-variant bg-surface-container-high/50 flex justify-between items-center">
+<h3 class="font-title-sm text-title-sm text-on-surface">Job Inspector</h3>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1" title="Delete Job">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-card_padding flex flex-col gap-6">
+<!-- Job Configuration -->
+<section>
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-4 border-b border-outline-variant/30 pb-2">Configuration</h4>
+<div class="space-y-4">
+<div>
+<label class="block font-body-md text-[12px] text-on-surface-variant mb-1">Job Name</label>
+<input class="w-full bg-surface border border-outline-variant rounded px-3 py-2 text-on-surface font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" type="text" value="Postgres Daily Backup">
+</div>
+<div>
+<label class="block font-body-md text-[12px] text-on-surface-variant mb-1 flex justify-between">
+<span class="">Cron Expression</span>
+<a class="text-primary hover:underline" href="#">Builder</a>
+</label>
+<input class="w-full bg-surface border border-outline-variant rounded px-3 py-2 text-primary font-code-terminal text-code-terminal focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" type="text" value="0 2 * * *">
+<p class="font-body-md text-[12px] text-tertiary mt-1 flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1">schedule</span> Runs every day at 02:00 AM
+                            </p>
+</div>
+<div>
+<label class="block font-body-md text-[12px] text-on-surface-variant mb-1">Command to Execute</label>
+<textarea class="w-full bg-[#11111B] border border-outline-variant rounded px-3 py-2 text-secondary font-code-terminal text-code-terminal focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none leading-relaxed" rows="3">/opt/scripts/db_backup.sh --full --compress</textarea>
+</div>
+<button class="w-full bg-surface-variant text-on-surface border border-outline-variant rounded py-2 font-body-md text-body-md hover:bg-surface-container-highest transition-colors">
+                            Save Changes
+                        </button>
+</div>
+</section>
+<!-- Environment Variables -->
+<section>
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-4 border-b border-outline-variant/30 pb-2 flex justify-between items-center">
+<span class="">Environment</span>
+<button class="text-primary hover:text-primary-fixed"><span class="material-symbols-outlined text-[16px]">add</span></button>
+</h4>
+<div class="bg-[#11111B] border border-outline-variant rounded-lg p-3 font-code-terminal text-code-terminal text-on-surface-variant space-y-2">
+<div class="flex border-b border-outline-variant/30 pb-2">
+<span class="text-primary w-24 shrink-0">PATH</span>
+<span class="text-secondary truncate">/usr/local/sbin:/usr/local/bin:/usr/sbin</span>
+</div>
+<div class="flex border-b border-outline-variant/30 pb-2">
+<span class="text-primary w-24 shrink-0">DB_USER</span>
+<span class="text-secondary">postgres_admin</span>
+</div>
+<div class="flex">
+<span class="text-primary w-24 shrink-0">LOG_DIR</span>
+<span class="text-secondary">/var/log/backups</span>
+</div>
+</div>
+</section>
+<!-- Execution History -->
+<section>
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-4 border-b border-outline-variant/30 pb-2">Recent Executions</h4>
+<div class="space-y-3">
+<!-- Run 1 -->
+<div class="bg-surface rounded-lg border border-outline-variant p-3 flex justify-between items-start group hover:border-primary/50 transition-colors cursor-pointer">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-tertiary text-[16px]">check_circle</span>
+<span class="font-data-mono text-data-mono text-on-surface">Today, 02:00:01</span>
+</div>
+<div class="font-body-md text-[12px] text-on-surface-variant pl-6">Exit Code: 0 • Duration: 45s</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity text-[18px]">terminal</span>
+</div>
+<!-- Run 2 -->
+<div class="bg-surface rounded-lg border border-outline-variant p-3 flex justify-between items-start group hover:border-primary/50 transition-colors cursor-pointer">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-tertiary text-[16px]">check_circle</span>
+<span class="font-data-mono text-data-mono text-on-surface">Yesterday, 02:00:02</span>
+</div>
+<div class="font-body-md text-[12px] text-on-surface-variant pl-6">Exit Code: 0 • Duration: 42s</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity text-[18px]">terminal</span>
+</div>
+<!-- Run 3 -->
+<div class="bg-surface rounded-lg border border-error/30 p-3 flex justify-between items-start group hover:border-error transition-colors cursor-pointer bg-error/5">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-error text-[16px]">error</span>
+<span class="font-data-mono text-data-mono text-on-surface">Oct 12, 02:00:05</span>
+</div>
+<div class="font-body-md text-[12px] text-error pl-6">Exit Code: 1 • Timeout</div>
+</div>
+<span class="material-symbols-outlined text-error opacity-0 group-hover:opacity-100 transition-opacity text-[18px]">terminal</span>
+</div>
+</div>
+</section>
+</div>
+</aside>
+</main>
+
+
+</body></html>

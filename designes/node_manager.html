@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lynx - Node.js Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-background": "#e3e0f7",
+                      "surface-dim": "#121221",
+                      "surface-container-low": "#1a1a2a",
+                      "on-tertiary": "#00390c",
+                      "on-error": "#690005",
+                      "on-secondary-fixed-variant": "#444558",
+                      "surface": "#121221",
+                      "primary-fixed-dim": "#a8c8ff",
+                      "error-container": "#93000a",
+                      "tertiary": "#a1dd9c",
+                      "secondary-fixed": "#e1e0f8",
+                      "on-tertiary-container": "#174f1e",
+                      "on-secondary-container": "#b4b3ca",
+                      "primary-container": "#89b4fa",
+                      "on-surface-variant": "#c3c6d2",
+                      "on-secondary-fixed": "#191a2b",
+                      "on-tertiary-fixed-variant": "#19511f",
+                      "tertiary-fixed": "#b4f2af",
+                      "surface-container-high": "#292839",
+                      "secondary": "#c5c4dc",
+                      "on-error-container": "#ffdad6",
+                      "surface-tint": "#a8c8ff",
+                      "secondary-fixed-dim": "#c5c4dc",
+                      "inverse-primary": "#305f9f",
+                      "surface-container-lowest": "#0d0d1c",
+                      "outline-variant": "#424750",
+                      "on-tertiary-fixed": "#002205",
+                      "inverse-on-surface": "#2f2f40",
+                      "surface-container": "#1e1e2e",
+                      "on-primary-container": "#094583",
+                      "error": "#ffb4ab",
+                      "on-secondary": "#2e2f41",
+                      "primary": "#b5cfff",
+                      "on-surface": "#e3e0f7",
+                      "background": "#121221",
+                      "surface-variant": "#333344",
+                      "secondary-container": "#444558",
+                      "tertiary-container": "#86c182",
+                      "on-primary-fixed-variant": "#0e4685",
+                      "outline": "#8d919b",
+                      "tertiary-fixed-dim": "#99d595",
+                      "on-primary-fixed": "#001b3c",
+                      "on-primary": "#003062",
+                      "surface-bright": "#383849",
+                      "primary-fixed": "#d5e3ff",
+                      "surface-container-highest": "#333344",
+                      "inverse-surface": "#e3e0f7"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "card_padding": "20px",
+                      "grid_gutter": "16px",
+                      "sidebar_width": "72px",
+                      "stack_gap": "8px",
+                      "container_padding": "24px"
+              },
+              "fontFamily": {
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "data-mono": [
+                              "JetBrains Mono"
+                      ],
+                      "code-terminal": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "title-sm": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "data-mono": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "code-terminal": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "title-sm": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-caps": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        /* Custom Scrollbar for Terminal / Grids */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: theme('colors.surface-container'); 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.surface-variant'); 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.outline'); 
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden antialiased font-body-md text-body-md">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-low dark:bg-surface-container-low fixed left-0 top-0 h-full w-[72px] border-r border-outline-variant dark:border-outline-variant flex flex-col items-center py-stack_gap gap-4 z-50">
+<!-- Brand -->
+<div class="mb-4 mt-2 flex flex-col items-center">
+<span class="material-symbols-outlined text-title-sm font-title-sm font-black text-primary dark:text-primary" style="font-variation-settings: 'FILL' 1; font-size: 32px;">terminal</span>
+</div>
+<!-- Primary Tabs -->
+<div class="flex-1 flex flex-col gap-2 w-full px-2">
+<a class="flex items-center justify-center w-12 h-12 text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all mx-auto" href="#" title="Dashboard">
+<span class="material-symbols-outlined">dashboard</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all mx-auto" href="#" title="CPU">
+<span class="material-symbols-outlined">memory</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all mx-auto" href="#" title="GPU">
+<span class="material-symbols-outlined">videogame_asset</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all mx-auto" href="#" title="Memory">
+<span class="material-symbols-outlined">sd_storage</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all mx-auto" href="#" title="Storage">
+<span class="material-symbols-outlined">storage</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all mx-auto" href="#" title="Network">
+<span class="material-symbols-outlined">lan</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all mx-auto" href="#" title="Processes">
+<span class="material-symbols-outlined">analytics</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all mx-auto" href="#" title="Logs">
+<span class="material-symbols-outlined">description</span>
+</a>
+<a class="relative flex items-center justify-center w-12 h-12 rounded-xl bg-secondary-container dark:bg-secondary-container text-primary dark:text-primary after:absolute after:left-0 after:w-1 after:h-8 after:bg-primary after:rounded-r-full mx-auto" href="#" title="Packages">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">package</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all mx-auto" href="#" title="Services">
+<span class="material-symbols-outlined">settings_suggest</span>
+</a>
+</div>
+<!-- Footer Tabs -->
+<div class="flex flex-col gap-2 w-full px-2 mt-auto">
+<a class="flex items-center justify-center w-12 h-12 text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all mx-auto" href="#" title="Help">
+<span class="material-symbols-outlined">help</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all mx-auto" href="#" title="Terminal">
+<span class="material-symbols-outlined">terminal</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 ml-[72px] flex flex-col h-full overflow-hidden bg-background">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface flex justify-between items-center w-full px-container_padding h-16 border-b border-outline-variant dark:border-outline-variant shrink-0 z-40">
+<!-- Search / Brand Area -->
+<div class="flex items-center gap-4 flex-1">
+<div class="text-headline-md font-headline-md font-bold text-primary dark:text-primary tracking-tight mr-4">Lynx</div>
+<div class="relative w-64 hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-9 pr-3 py-1.5 text-body-md text-on-surface focus:outline-none focus:border-primary transition-colors placeholder:text-on-surface-variant" placeholder="Search Node.js packages..." type="text"/>
+</div>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant border border-outline-variant overflow-hidden ml-2 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">person</span>
+</div>
+</div>
+</header>
+<!-- Scrollable Canvas -->
+<main class="flex-1 overflow-y-auto p-container_padding pb-24">
+<!-- Page Header -->
+<div class="mb-8 flex justify-between items-end">
+<div>
+<h1 class="text-display-lg font-display-lg text-on-surface mb-2">Node.js Manager</h1>
+<p class="text-body-md font-body-md text-on-surface-variant">Manage local projects, global packages, and active node processes.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 rounded-lg bg-surface-container border border-outline-variant text-on-surface font-body-md text-sm hover:bg-surface-variant transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">refresh</span>
+                        Rescan System
+                    </button>
+</div>
+</div>
+<!-- Grid Layout -->
+<div class="grid grid-cols-12 gap-grid_gutter mb-8">
+<!-- Summary Card: Global Version -->
+<div class="col-span-12 md:col-span-4 bg-surface-container rounded-xl border border-outline-variant p-card_padding flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="text-title-sm font-title-sm text-on-surface">Global Environment</span>
+<span class="material-symbols-outlined text-tertiary">javascript</span>
+</div>
+<div>
+<div class="text-label-caps font-label-caps text-on-surface-variant mb-1">NODE.JS VERSION</div>
+<div class="text-display-lg font-display-lg text-primary">v20.11.0</div>
+<div class="flex gap-4 mt-3">
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-data-mono font-data-mono text-on-surface-variant">npm v10.2.4</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="text-data-mono font-data-mono text-on-surface-variant">yarn v1.22.19</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Summary Card: Disk Usage -->
+<div class="col-span-12 md:col-span-4 bg-surface-container rounded-xl border border-outline-variant p-card_padding flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="text-title-sm font-title-sm text-on-surface">Storage Impact</span>
+<span class="material-symbols-outlined text-error">hard_drive_2</span>
+</div>
+<div>
+<div class="text-label-caps font-label-caps text-on-surface-variant mb-1">TOTAL NODE_MODULES SIZE</div>
+<div class="text-display-lg font-display-lg text-on-surface">14.2 GB</div>
+<div class="mt-3 flex items-center justify-between text-data-mono font-data-mono">
+<span class="text-on-surface-variant">Across 42 projects</span>
+<button class="text-error hover:text-error-container transition-colors text-xs font-semibold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">delete</span> Purge Cache
+                            </button>
+</div>
+</div>
+</div>
+<!-- Summary Card: Active Processes -->
+<div class="col-span-12 md:col-span-4 bg-surface-container rounded-xl border border-outline-variant p-card_padding flex flex-col justify-between relative overflow-hidden">
+<!-- Subtle background accent -->
+<div class="absolute -right-6 -bottom-6 w-32 h-32 bg-primary/5 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex justify-between items-start mb-4 relative z-10">
+<span class="text-title-sm font-title-sm text-on-surface">Runtime Telemetry</span>
+<span class="material-symbols-outlined text-tertiary animate-pulse">memory</span>
+</div>
+<div class="relative z-10">
+<div class="text-label-caps font-label-caps text-on-surface-variant mb-1">ACTIVE NODE PROCESSES</div>
+<div class="text-display-lg font-display-lg text-on-surface">8</div>
+<div class="mt-3 text-data-mono font-data-mono text-on-surface-variant">
+                            Consuming 1.4 GB RAM Total
+                        </div>
+</div>
+</div>
+</div>
+<!-- Bento Layout for Detail Sections -->
+<div class="grid grid-cols-12 gap-grid_gutter">
+<!-- Local Projects Table -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container rounded-xl border border-outline-variant flex flex-col">
+<div class="p-card_padding border-b border-outline-variant flex justify-between items-center">
+<div>
+<h2 class="text-title-sm font-title-sm text-on-surface">Local Projects</h2>
+<p class="text-label-caps font-label-caps text-on-surface-variant mt-1">DETECTED REPOSITORIES</p>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-on-surface-variant text-[16px]">filter_list</span>
+<select class="pl-8 pr-8 py-1.5 bg-surface border border-outline-variant rounded-md text-data-mono font-data-mono text-on-surface focus:outline-none focus:border-primary appearance-none text-xs">
+<option>Sort by Size</option>
+<option>Sort by Name</option>
+</select>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant bg-surface-container-low/50">
+<th class="p-4 text-label-caps font-label-caps text-on-surface-variant font-medium">Project Name &amp; Path</th>
+<th class="p-4 text-label-caps font-label-caps text-on-surface-variant font-medium">Target Version</th>
+<th class="p-4 text-label-caps font-label-caps text-on-surface-variant font-medium">Size</th>
+<th class="p-4 text-label-caps font-label-caps text-on-surface-variant font-medium text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="text-data-mono font-data-mono text-on-surface divide-y divide-outline-variant/50">
+<tr class="hover:bg-surface-variant/30 transition-colors">
+<td class="p-4">
+<div class="font-semibold text-primary-fixed-dim">lynx-dashboard-ui</div>
+<div class="text-xs text-on-surface-variant mt-0.5">/var/www/lynx/client</div>
+</td>
+<td class="p-4">
+<span class="px-2 py-1 rounded bg-surface border border-outline-variant text-xs text-on-surface">v20.x</span>
+</td>
+<td class="p-4 text-error">1.2 GB</td>
+<td class="p-4 text-right">
+<button class="px-3 py-1.5 rounded bg-surface border border-outline-variant text-on-surface hover:bg-surface-variant hover:text-error transition-colors flex items-center gap-1 ml-auto text-xs">
+<span class="material-symbols-outlined text-[14px]">cleaning_services</span> Clean
+                                        </button>
+</td>
+</tr>
+<tr class="hover:bg-surface-variant/30 transition-colors">
+<td class="p-4">
+<div class="font-semibold text-primary-fixed-dim">telemetry-api</div>
+<div class="text-xs text-on-surface-variant mt-0.5">/opt/lynx/services/api</div>
+</td>
+<td class="p-4">
+<span class="px-2 py-1 rounded bg-surface border border-outline-variant text-xs text-on-surface">v18.17.0</span>
+</td>
+<td class="p-4">450 MB</td>
+<td class="p-4 text-right">
+<button class="px-3 py-1.5 rounded bg-surface border border-outline-variant text-on-surface hover:bg-surface-variant hover:text-error transition-colors flex items-center gap-1 ml-auto text-xs">
+<span class="material-symbols-outlined text-[14px]">cleaning_services</span> Clean
+                                        </button>
+</td>
+</tr>
+<tr class="hover:bg-surface-variant/30 transition-colors">
+<td class="p-4">
+<div class="font-semibold text-primary-fixed-dim">legacy-worker</div>
+<div class="text-xs text-on-surface-variant mt-0.5">/home/admin/scripts/worker</div>
+</td>
+<td class="p-4">
+<span class="px-2 py-1 rounded bg-error-container/20 border border-error-container text-xs text-error">v14.x (EOL)</span>
+</td>
+<td class="p-4">210 MB</td>
+<td class="p-4 text-right">
+<button class="px-3 py-1.5 rounded bg-surface border border-outline-variant text-on-surface hover:bg-surface-variant hover:text-error transition-colors flex items-center gap-1 ml-auto text-xs">
+<span class="material-symbols-outlined text-[14px]">cleaning_services</span> Clean
+                                        </button>
+</td>
+</tr>
+<tr class="hover:bg-surface-variant/30 transition-colors">
+<td class="p-4">
+<div class="font-semibold text-primary-fixed-dim">docs-site</div>
+<div class="text-xs text-on-surface-variant mt-0.5">/var/www/lynx/docs</div>
+</td>
+<td class="p-4">
+<span class="px-2 py-1 rounded bg-surface border border-outline-variant text-xs text-on-surface">v20.x</span>
+</td>
+<td class="p-4">850 MB</td>
+<td class="p-4 text-right">
+<button class="px-3 py-1.5 rounded bg-surface border border-outline-variant text-on-surface hover:bg-surface-variant hover:text-error transition-colors flex items-center gap-1 ml-auto text-xs">
+<span class="material-symbols-outlined text-[14px]">cleaning_services</span> Clean
+                                        </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-outline-variant bg-surface-container-low/30 text-center">
+<button class="text-primary hover:text-primary-fixed-dim text-xs font-semibold tracking-wide uppercase">View All 42 Projects</button>
+</div>
+</div>
+<!-- Sidebar Stack: Global Packages & Active Processes -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-grid_gutter">
+<!-- Active Processes Terminal View -->
+<div class="bg-[#11111B] rounded-xl border border-outline-variant flex flex-col h-[300px]">
+<div class="p-3 border-b border-outline-variant flex justify-between items-center bg-surface-container/50 rounded-t-xl">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="text-title-sm font-title-sm text-on-surface text-sm">Active Scripts</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[16px]">terminal</span>
+</div>
+<div class="p-4 overflow-y-auto flex-1 font-code-terminal text-code-terminal text-on-surface-variant">
+<div class="flex justify-between items-start mb-3 pb-3 border-b border-surface-variant/50">
+<div>
+<div class="text-tertiary">PID: 14092</div>
+<div class="text-on-surface">node /opt/lynx/services/api/dist/main.js</div>
+</div>
+<button class="text-error hover:text-error-container ml-2" title="Kill Process"><span class="material-symbols-outlined text-[16px]">stop_circle</span></button>
+</div>
+<div class="flex justify-between items-start mb-3 pb-3 border-b border-surface-variant/50">
+<div>
+<div class="text-tertiary">PID: 14105</div>
+<div class="text-on-surface">npm run dev --prefix /var/www/lynx/client</div>
+</div>
+<button class="text-error hover:text-error-container ml-2" title="Kill Process"><span class="material-symbols-outlined text-[16px]">stop_circle</span></button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<div class="text-tertiary">PID: 8842</div>
+<div class="text-on-surface">node /usr/local/bin/pm2 daemon</div>
+</div>
+<button class="text-error hover:text-error-container ml-2" title="Kill Process"><span class="material-symbols-outlined text-[16px]">stop_circle</span></button>
+</div>
+</div>
+</div>
+<!-- Global Packages List -->
+<div class="bg-surface-container rounded-xl border border-outline-variant flex flex-col flex-1">
+<div class="p-card_padding border-b border-outline-variant">
+<h2 class="text-title-sm font-title-sm text-on-surface">Global Packages</h2>
+<p class="text-label-caps font-label-caps text-on-surface-variant mt-1">/USR/LOCAL/LIB/NODE_MODULES</p>
+</div>
+<div class="p-2 overflow-y-auto max-h-[300px]">
+<ul class="font-data-mono text-data-mono text-on-surface">
+<li class="flex justify-between items-center p-3 hover:bg-surface-variant/30 rounded-lg transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[16px]">inventory_2</span>
+<span>pm2</span>
+</div>
+<span class="text-on-surface-variant">v5.3.0</span>
+</li>
+<li class="flex justify-between items-center p-3 hover:bg-surface-variant/30 rounded-lg transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[16px]">inventory_2</span>
+<span>typescript</span>
+</div>
+<span class="text-on-surface-variant">v5.3.3</span>
+</li>
+<li class="flex justify-between items-center p-3 hover:bg-surface-variant/30 rounded-lg transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[16px]">inventory_2</span>
+<span>npm-check-updates</span>
+</div>
+<span class="text-on-surface-variant">v16.14.12</span>
+</li>
+<li class="flex justify-between items-center p-3 hover:bg-surface-variant/30 rounded-lg transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[16px]">inventory_2</span>
+<span>node-gyp</span>
+</div>
+<span class="text-on-surface-variant">v10.0.1</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
