@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lynx - Service Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-high": "#292839",
+                      "surface-container": "#1e1e2e",
+                      "on-secondary-fixed-variant": "#444558",
+                      "on-secondary": "#2e2f41",
+                      "on-surface-variant": "#c3c6d2",
+                      "tertiary-fixed": "#b4f2af",
+                      "surface-container-low": "#1a1a2a",
+                      "tertiary": "#a1dd9c",
+                      "primary-fixed-dim": "#a8c8ff",
+                      "primary": "#b5cfff",
+                      "on-primary": "#003062",
+                      "surface-tint": "#a8c8ff",
+                      "surface-dim": "#121221",
+                      "background": "#121221",
+                      "tertiary-container": "#86c182",
+                      "on-tertiary": "#00390c",
+                      "surface": "#121221",
+                      "error": "#ffb4ab",
+                      "on-secondary-container": "#b4b3ca",
+                      "surface-container-lowest": "#0d0d1c",
+                      "primary-fixed": "#d5e3ff",
+                      "on-tertiary-fixed-variant": "#19511f",
+                      "on-surface": "#e3e0f7",
+                      "inverse-on-surface": "#2f2f40",
+                      "on-error": "#690005",
+                      "tertiary-fixed-dim": "#99d595",
+                      "secondary": "#c5c4dc",
+                      "error-container": "#93000a",
+                      "on-error-container": "#ffdad6",
+                      "surface-bright": "#383849",
+                      "on-tertiary-fixed": "#002205",
+                      "surface-container-highest": "#333344",
+                      "secondary-fixed-dim": "#c5c4dc",
+                      "outline-variant": "#424750",
+                      "on-secondary-fixed": "#191a2b",
+                      "primary-container": "#89b4fa",
+                      "on-tertiary-container": "#174f1e",
+                      "surface-variant": "#333344",
+                      "inverse-primary": "#305f9f",
+                      "on-background": "#e3e0f7",
+                      "secondary-container": "#444558",
+                      "outline": "#8d919b",
+                      "on-primary-fixed-variant": "#0e4685",
+                      "on-primary-container": "#094583",
+                      "inverse-surface": "#e3e0f7",
+                      "on-primary-fixed": "#001b3c",
+                      "secondary-fixed": "#e1e0f8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack_gap": "8px",
+                      "sidebar_width": "72px",
+                      "grid_gutter": "16px",
+                      "card_padding": "20px",
+                      "container_padding": "24px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "code-terminal": [
+                              "JetBrains Mono"
+                      ],
+                      "data-mono": [
+                              "JetBrains Mono"
+                      ],
+                      "title-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "code-terminal": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "data-mono": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "title-sm": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 1;
+        }
+        /* Custom scrollbar for terminal/lists */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121221; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333344; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #424750; 
+        }
+      </style>
+</head>
+<body class="bg-background text-on-surface font-body-md h-screen overflow-hidden flex">
+<!-- SideNavBar Component -->
+<nav class="bg-background dark:bg-background text-primary dark:text-primary w-[72px] h-screen fixed left-0 top-0 border-r border-outline-variant dark:border-outline-variant z-20 flex flex-col items-center py-sidebar_width gap-stack_gap pt-6">
+<!-- Tab: Dashboard -->
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#" title="Dashboard">
+<span class="material-symbols-outlined">dashboard</span>
+<div class="absolute left-14 hidden group-hover:block bg-surface-container-high text-on-surface px-2 py-1 rounded-DEFAULT font-label-caps text-label-caps z-50 shadow-sm border border-outline-variant">Dashboard</div>
+</a>
+<!-- Tab: CPU -->
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#" title="CPU">
+<span class="material-symbols-outlined">memory</span>
+<div class="absolute left-14 hidden group-hover:block bg-surface-container-high text-on-surface px-2 py-1 rounded-DEFAULT font-label-caps text-label-caps z-50 shadow-sm border border-outline-variant">CPU</div>
+</a>
+<!-- Tab: GPU -->
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#" title="GPU">
+<span class="material-symbols-outlined">videogame_asset</span>
+<div class="absolute left-14 hidden group-hover:block bg-surface-container-high text-on-surface px-2 py-1 rounded-DEFAULT font-label-caps text-label-caps z-50 shadow-sm border border-outline-variant">GPU</div>
+</a>
+<!-- Tab: Memory -->
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#" title="Memory">
+<span class="material-symbols-outlined">storage</span>
+<div class="absolute left-14 hidden group-hover:block bg-surface-container-high text-on-surface px-2 py-1 rounded-DEFAULT font-label-caps text-label-caps z-50 shadow-sm border border-outline-variant">Memory</div>
+</a>
+<!-- Tab: Storage -->
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#" title="Storage">
+<span class="material-symbols-outlined">hard_drive</span>
+<div class="absolute left-14 hidden group-hover:block bg-surface-container-high text-on-surface px-2 py-1 rounded-DEFAULT font-label-caps text-label-caps z-50 shadow-sm border border-outline-variant">Storage</div>
+</a>
+<!-- Tab: Network -->
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#" title="Network">
+<span class="material-symbols-outlined">language</span>
+<div class="absolute left-14 hidden group-hover:block bg-surface-container-high text-on-surface px-2 py-1 rounded-DEFAULT font-label-caps text-label-caps z-50 shadow-sm border border-outline-variant">Network</div>
+</a>
+<!-- Tab: Processes -->
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#" title="Processes">
+<span class="material-symbols-outlined">terminal</span>
+<div class="absolute left-14 hidden group-hover:block bg-surface-container-high text-on-surface px-2 py-1 rounded-DEFAULT font-label-caps text-label-caps z-50 shadow-sm border border-outline-variant">Processes</div>
+</a>
+<!-- Tab: Logs -->
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#" title="Logs">
+<span class="material-symbols-outlined">list_alt</span>
+<div class="absolute left-14 hidden group-hover:block bg-surface-container-high text-on-surface px-2 py-1 rounded-DEFAULT font-label-caps text-label-caps z-50 shadow-sm border border-outline-variant">Logs</div>
+</a>
+<!-- Tab: Packages -->
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#" title="Packages">
+<span class="material-symbols-outlined">package_2</span>
+<div class="absolute left-14 hidden group-hover:block bg-surface-container-high text-on-surface px-2 py-1 rounded-DEFAULT font-label-caps text-label-caps z-50 shadow-sm border border-outline-variant">Packages</div>
+</a>
+<!-- Tab: Services (ACTIVE) -->
+<a class="relative flex items-center justify-center h-12 w-12 rounded-xl bg-primary text-on-primary shadow-sm scale-95 transition-transform group" href="#" title="Services">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings_suggest</span>
+<div class="absolute left-14 hidden group-hover:block bg-surface-container-high text-on-surface px-2 py-1 rounded-DEFAULT font-label-caps text-label-caps z-50 shadow-sm border border-outline-variant whitespace-nowrap">Services</div>
+</a>
+<!-- Tab: Cleaner -->
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#" title="Cleaner">
+<span class="material-symbols-outlined">cleaning_services</span>
+<div class="absolute left-14 hidden group-hover:block bg-surface-container-high text-on-surface px-2 py-1 rounded-DEFAULT font-label-caps text-label-caps z-50 shadow-sm border border-outline-variant">Cleaner</div>
+</a>
+<div class="flex-grow"></div>
+<!-- Tab: Settings -->
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative mb-6" href="#" title="Settings">
+<span class="material-symbols-outlined">settings</span>
+<div class="absolute left-14 hidden group-hover:block bg-surface-container-high text-on-surface px-2 py-1 rounded-DEFAULT font-label-caps text-label-caps z-50 shadow-sm border border-outline-variant">Settings</div>
+</a>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 ml-[72px] flex flex-col h-screen overflow-hidden">
+<!-- TopAppBar Component -->
+<header class="bg-background/80 backdrop-blur-md h-16 fixed top-0 right-0 left-[72px] z-10 border-b border-outline-variant flex items-center justify-between px-container_padding w-[calc(100%-72px)]">
+<!-- Brand -->
+<div class="flex items-center gap-3">
+<span class="font-headline-md text-headline-md font-bold text-primary">Lynx</span>
+</div>
+<!-- Actions Right -->
+<div class="flex items-center gap-4">
+<!-- Search Bar -->
+<div class="relative hidden md:block w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full bg-surface-container text-on-surface border border-outline-variant rounded-lg pl-9 pr-3 py-1.5 focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container font-body-md text-body-md placeholder-on-surface-variant" placeholder="Filter services..." type="text"/>
+</div>
+<!-- Trailing Icons -->
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-variant">
+<span class="material-symbols-outlined">refresh</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100 flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-variant">
+<span class="material-symbols-outlined">power_settings_new</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content Canvas -->
+<main class="flex-1 overflow-y-auto mt-16 p-container_padding bg-background custom-scrollbar">
+<!-- Page Header -->
+<div class="mb-8">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-2">Service Manager</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Manage and monitor systemd services and daemons.</p>
+</div>
+<!-- Summary Cards Bento -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-grid_gutter mb-8">
+<!-- Total -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-card_padding flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-2">Total Services</span>
+<span class="font-display-lg text-display-lg text-on-surface">342</span>
+</div>
+<!-- Running -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-card_padding flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-2">Running</span>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="font-display-lg text-display-lg text-on-surface">128</span>
+</div>
+</div>
+<!-- Failed -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-card_padding flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-2">Failed</span>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="font-display-lg text-display-lg text-on-surface">3</span>
+</div>
+</div>
+<!-- Enabled at Boot -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-card_padding flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider mb-2">Enabled at Boot</span>
+<span class="font-display-lg text-display-lg text-on-surface">145</span>
+</div>
+</div>
+<!-- Split Layout: List & Details -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-grid_gutter h-[calc(100vh-320px)] min-h-[500px]">
+<!-- Services List (Left - 8 cols) -->
+<div class="lg:col-span-8 bg-surface-container border border-outline-variant rounded-xl flex flex-col overflow-hidden">
+<div class="p-4 border-b border-outline-variant flex items-center justify-between bg-surface-container-high/50">
+<h2 class="font-title-sm text-title-sm text-on-surface">System Services</h2>
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-surface-variant text-on-surface rounded font-label-caps text-label-caps border border-outline-variant hover:bg-surface-bright transition">All</button>
+<button class="px-3 py-1 bg-transparent text-on-surface-variant rounded font-label-caps text-label-caps border border-transparent hover:bg-surface-variant transition">Active</button>
+<button class="px-3 py-1 bg-transparent text-error rounded font-label-caps text-label-caps border border-transparent hover:bg-error/10 transition">Failed</button>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead class="sticky top-0 bg-surface-container border-b border-outline-variant z-10">
+<tr>
+<th class="p-4 font-label-caps text-label-caps text-on-surface-variant font-medium">Service Name</th>
+<th class="p-4 font-label-caps text-label-caps text-on-surface-variant font-medium">Status</th>
+<th class="p-4 font-label-caps text-label-caps text-on-surface-variant font-medium">Startup</th>
+<th class="p-4 font-label-caps text-label-caps text-on-surface-variant font-medium">Impact</th>
+<th class="p-4 font-label-caps text-label-caps text-on-surface-variant font-medium text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md divide-y divide-outline-variant/50">
+<!-- Row 1: docker.service (Running) -->
+<tr class="hover:bg-surface-variant/50 transition-colors cursor-pointer bg-surface-variant/20 border-l-2 border-l-primary">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[20px]">deployed_code</span>
+<div>
+<div class="font-data-mono text-data-mono text-on-surface">docker.service</div>
+<div class="text-xs text-on-surface-variant mt-0.5">Docker Application Container Engine</div>
+</div>
+</div>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-tertiary/10 text-tertiary border border-tertiary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-1.5"></span>Running
+                                        </span>
+</td>
+<td class="p-4">
+<span class="text-on-surface">Enabled</span>
+</td>
+<td class="p-4">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-xs"><span class="text-on-surface-variant w-8">CPU</span><span class="font-data-mono text-on-surface">1.2%</span></div>
+<div class="flex items-center gap-2 text-xs"><span class="text-on-surface-variant w-8">RAM</span><span class="font-data-mono text-on-surface">145MB</span></div>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center justify-end gap-2">
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error/10 transition" title="Stop">
+<span class="material-symbols-outlined text-[18px]">stop</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-primary/10 transition" title="Restart">
+<span class="material-symbols-outlined text-[18px]">restart_alt</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: sshd.service (Running) -->
+<tr class="hover:bg-surface-variant/50 transition-colors cursor-pointer border-l-2 border-l-transparent">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">lock</span>
+<div>
+<div class="font-data-mono text-data-mono text-on-surface">sshd.service</div>
+<div class="text-xs text-on-surface-variant mt-0.5">OpenSSH Daemon</div>
+</div>
+</div>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-tertiary/10 text-tertiary border border-tertiary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-1.5"></span>Running
+                                        </span>
+</td>
+<td class="p-4">
+<span class="text-on-surface">Enabled</span>
+</td>
+<td class="p-4">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-xs"><span class="text-on-surface-variant w-8">CPU</span><span class="font-data-mono text-on-surface">0.1%</span></div>
+<div class="flex items-center gap-2 text-xs"><span class="text-on-surface-variant w-8">RAM</span><span class="font-data-mono text-on-surface">12MB</span></div>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center justify-end gap-2">
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error/10 transition" title="Stop">
+<span class="material-symbols-outlined text-[18px]">stop</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-primary/10 transition" title="Restart">
+<span class="material-symbols-outlined text-[18px]">restart_alt</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: bluetooth.service (Stopped) -->
+<tr class="hover:bg-surface-variant/50 transition-colors cursor-pointer border-l-2 border-l-transparent opacity-80">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">bluetooth</span>
+<div>
+<div class="font-data-mono text-data-mono text-on-surface">bluetooth.service</div>
+<div class="text-xs text-on-surface-variant mt-0.5">Bluetooth service</div>
+</div>
+</div>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-surface-variant text-on-surface-variant border border-outline-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant mr-1.5"></span>Stopped
+                                        </span>
+</td>
+<td class="p-4">
+<span class="text-on-surface-variant">Disabled</span>
+</td>
+<td class="p-4">
+<span class="text-on-surface-variant text-xs">-</span>
+</td>
+<td class="p-4">
+<div class="flex items-center justify-end gap-2">
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-tertiary hover:bg-tertiary/10 transition" title="Start">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: postgresql.service (Failed) -->
+<tr class="hover:bg-surface-variant/50 transition-colors cursor-pointer border-l-2 border-l-error/50 bg-error/5">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error text-[20px]">database</span>
+<div>
+<div class="font-data-mono text-data-mono text-error">postgresql.service</div>
+<div class="text-xs text-on-surface-variant mt-0.5">PostgreSQL RDBMS</div>
+</div>
+</div>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-error/10 text-error border border-error/20">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-1.5"></span>Failed
+                                        </span>
+</td>
+<td class="p-4">
+<span class="text-on-surface">Enabled</span>
+</td>
+<td class="p-4">
+<span class="text-on-surface-variant text-xs">-</span>
+</td>
+<td class="p-4">
+<div class="flex items-center justify-end gap-2">
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-primary/10 transition" title="Restart">
+<span class="material-symbols-outlined text-[18px]">restart_alt</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: ufw.service (Running) -->
+<tr class="hover:bg-surface-variant/50 transition-colors cursor-pointer border-l-2 border-l-transparent">
+<td class="p-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">security</span>
+<div>
+<div class="font-data-mono text-data-mono text-on-surface">ufw.service</div>
+<div class="text-xs text-on-surface-variant mt-0.5">Uncomplicated firewall</div>
+</div>
+</div>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-tertiary/10 text-tertiary border border-tertiary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-1.5"></span>Running
+                                        </span>
+</td>
+<td class="p-4">
+<span class="text-on-surface">Enabled</span>
+</td>
+<td class="p-4">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-xs"><span class="text-on-surface-variant w-8">CPU</span><span class="font-data-mono text-on-surface">0.0%</span></div>
+<div class="flex items-center gap-2 text-xs"><span class="text-on-surface-variant w-8">RAM</span><span class="font-data-mono text-on-surface">2MB</span></div>
+</div>
+</td>
+<td class="p-4">
+<div class="flex items-center justify-end gap-2">
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-error/10 transition" title="Stop">
+<span class="material-symbols-outlined text-[18px]">stop</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-primary/10 transition" title="Restart">
+<span class="material-symbols-outlined text-[18px]">restart_alt</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Service Details Panel (Right - 4 cols) -->
+<div class="lg:col-span-4 bg-surface-container border border-outline-variant rounded-xl flex flex-col overflow-hidden">
+<!-- Header -->
+<div class="p-card_padding border-b border-outline-variant bg-surface-container-high/50 flex flex-col gap-3">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">deployed_code</span>
+</div>
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface">docker.service</h3>
+<span class="font-label-caps text-label-caps text-tertiary">Active (running)</span>
+</div>
+</div>
+<!-- Enable Toggle -->
+<div class="flex flex-col items-end gap-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Boot</span>
+<button class="relative inline-flex h-5 w-9 items-center rounded-full bg-primary-container">
+<span class="inline-block h-3.5 w-3.5 translate-x-4 transform rounded-full bg-on-primary-container transition"></span>
+</button>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Docker Application Container Engine</p>
+</div>
+<!-- Tabs/Path Info -->
+<div class="p-card_padding border-b border-outline-variant flex flex-col gap-4">
+<div class="flex items-center gap-2 bg-background p-2 rounded border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant text-[16px]">folder</span>
+<span class="font-data-mono text-[11px] text-on-surface-variant truncate">/lib/systemd/system/docker.service</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<span class="block font-label-caps text-label-caps text-on-surface-variant mb-1">Main PID</span>
+<span class="font-data-mono text-data-mono text-on-surface">1405 (dockerd)</span>
+</div>
+<div>
+<span class="block font-label-caps text-label-caps text-on-surface-variant mb-1">Tasks</span>
+<span class="font-data-mono text-data-mono text-on-surface">24</span>
+</div>
+</div>
+</div>
+<!-- Terminal Logs View -->
+<div class="flex-1 bg-[#11111B] flex flex-col overflow-hidden relative">
+<div class="absolute top-0 left-0 right-0 h-8 bg-[#11111B] border-b border-outline-variant flex items-center justify-between px-3 z-10">
+<span class="font-label-caps text-label-caps text-on-surface-variant">journalctl -u docker.service -n 50</span>
+<button class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[16px]">content_copy</span></button>
+</div>
+<div class="flex-1 p-4 pt-10 overflow-y-auto custom-scrollbar font-code-terminal text-code-terminal text-on-surface-variant">
+<div class="text-secondary opacity-70 mb-2">-- Logs begin at Wed 2023-10-25 08:30:00 UTC, end at Wed 2023-10-25 14:45:21 UTC. --</div>
+<div class="mb-1"><span class="text-tertiary">Oct 25 14:40:12</span> lynx-node systemd[1]: Starting Docker Application Container Engine...</div>
+<div class="mb-1"><span class="text-tertiary">Oct 25 14:40:12</span> lynx-node dockerd[1405]: time="2023-10-25T14:40:12.123Z" level=info msg="Starting up"</div>
+<div class="mb-1"><span class="text-tertiary">Oct 25 14:40:12</span> lynx-node dockerd[1405]: time="2023-10-25T14:40:12.150Z" level=info msg="parsed scheme: \"unix\"" module=grpc</div>
+<div class="mb-1"><span class="text-tertiary">Oct 25 14:40:12</span> lynx-node dockerd[1405]: time="2023-10-25T14:40:12.151Z" level=info msg="scheme \"unix\" not registered, fallback to default scheme" module=grpc</div>
+<div class="mb-1"><span class="text-tertiary">Oct 25 14:40:12</span> lynx-node dockerd[1405]: time="2023-10-25T14:40:12.200Z" level=info msg="ccResolverWrapper: sending update to cc: {[{unix:///run/containerd/containerd.sock  <nil> 0 <nil>}] <nil> <nil>}" module=grpc</nil></nil></nil></nil></div>
+<div class="mb-1"><span class="text-tertiary">Oct 25 14:40:12</span> lynx-node dockerd[1405]: time="2023-10-25T14:40:12.205Z" level=info msg="ClientConn switching balancer to \"pick_first\"" module=grpc</div>
+<div class="mb-1"><span class="text-tertiary">Oct 25 14:40:12</span> lynx-node dockerd[1405]: time="2023-10-25T14:40:12.500Z" level=info msg="Loading containers: start."</div>
+<div class="mb-1"><span class="text-tertiary">Oct 25 14:40:13</span> lynx-node dockerd[1405]: time="2023-10-25T14:40:13.100Z" level=info msg="Default bridge (docker0) is assigned with an IP address 172.17.0.0/16. Daemon option --bip can be used to set a preferred IP address"</div>
+<div class="mb-1"><span class="text-tertiary">Oct 25 14:40:13</span> lynx-node dockerd[1405]: time="2023-10-25T14:40:13.500Z" level=info msg="Loading containers: done."</div>
+<div class="mb-1"><span class="text-tertiary">Oct 25 14:40:13</span> lynx-node dockerd[1405]: time="2023-10-25T14:40:13.600Z" level=info msg="Docker daemon" commit=a89b842 graphdriver(s)=overlay2 version=24.0.5</div>
+<div class="mb-1"><span class="text-tertiary">Oct 25 14:40:13</span> lynx-node dockerd[1405]: time="2023-10-25T14:40:13.601Z" level=info msg="Daemon has completed initialization"</div>
+<div class="mb-1"><span class="text-tertiary">Oct 25 14:40:13</span> lynx-node systemd[1]: Started Docker Application Container Engine.</div>
+<div class="mb-1"><span class="text-tertiary">Oct 25 14:40:13</span> lynx-node dockerd[1405]: time="2023-10-25T14:40:13.650Z" level=info msg="API listen on /run/docker.sock"</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="p-4 bg-surface-container-high border-t border-outline-variant flex justify-between items-center">
+<button class="px-4 py-2 bg-error text-on-error rounded font-label-caps text-label-caps font-bold hover:bg-error/90 transition flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">stop</span> Stop
+                        </button>
+<button class="px-4 py-2 border border-outline-variant text-on-surface-variant hover:text-on-surface hover:bg-surface-variant rounded font-label-caps text-label-caps transition flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span> Restart
+                        </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

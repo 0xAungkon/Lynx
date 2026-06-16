@@ -1,0 +1,419 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Lynx - System Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#002205",
+                    "surface-container-lowest": "#0d0d1c",
+                    "on-surface-variant": "#c3c6d2",
+                    "background": "#121221",
+                    "inverse-on-surface": "#2f2f40",
+                    "error": "#ffb4ab",
+                    "surface-dim": "#121221",
+                    "on-secondary-container": "#b4b3ca",
+                    "on-background": "#e3e0f7",
+                    "on-primary": "#003062",
+                    "tertiary-fixed-dim": "#99d595",
+                    "secondary-fixed-dim": "#c5c4dc",
+                    "surface": "#121221",
+                    "inverse-primary": "#305f9f",
+                    "on-primary-fixed": "#001b3c",
+                    "secondary-container": "#444558",
+                    "primary": "#b5cfff",
+                    "secondary-fixed": "#e1e0f8",
+                    "on-error-container": "#ffdad6",
+                    "error-container": "#93000a",
+                    "surface-container-high": "#292839",
+                    "surface-variant": "#333344",
+                    "on-tertiary-container": "#174f1e",
+                    "surface-container-low": "#1a1a2a",
+                    "on-surface": "#e3e0f7",
+                    "on-tertiary-fixed-variant": "#19511f",
+                    "surface-tint": "#a8c8ff",
+                    "on-tertiary": "#00390c",
+                    "on-primary-container": "#094583",
+                    "tertiary-fixed": "#b4f2af",
+                    "surface-bright": "#383849",
+                    "on-secondary-fixed-variant": "#444558",
+                    "outline-variant": "#424750",
+                    "inverse-surface": "#e3e0f7",
+                    "on-primary-fixed-variant": "#0e4685",
+                    "secondary": "#c5c4dc",
+                    "surface-container": "#1e1e2e",
+                    "on-error": "#690005",
+                    "primary-fixed": "#d5e3ff",
+                    "tertiary-container": "#86c182",
+                    "surface-container-highest": "#333344",
+                    "tertiary": "#a1dd9c",
+                    "primary-container": "#89b4fa",
+                    "primary-fixed-dim": "#a8c8ff",
+                    "on-secondary": "#2e2f41",
+                    "on-secondary-fixed": "#191a2b",
+                    "outline": "#8d919b"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sidebar_width": "72px",
+                    "container_padding": "24px",
+                    "stack_gap": "8px",
+                    "grid_gutter": "16px",
+                    "card_padding": "20px"
+            },
+            "fontFamily": {
+                    "data-mono": [
+                            "JetBrains Mono"
+                    ],
+                    "code-terminal": [
+                            "JetBrains Mono"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "title-sm": [
+                            "Inter"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "label-caps": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "data-mono": [
+                            "13px",
+                            {
+                                    "lineHeight": "18px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "code-terminal": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "display-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "title-sm": [
+                            "18px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-caps": [
+                            "11px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "700"
+                            }
+                    ]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .circular-chart {
+            display: block;
+            margin: 10px auto;
+            max-width: 80%;
+            max-height: 250px;
+        }
+        .circle-bg {
+            fill: none;
+            stroke: #292839;
+            stroke-width: 3.8;
+        }
+        .circle {
+            fill: none;
+            stroke-width: 2.8;
+            stroke-linecap: round;
+            animation: progress 1s ease-out forwards;
+        }
+        @keyframes progress {
+            0% {
+                stroke-dasharray: 0 100;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background dark:bg-background text-on-surface dark:text-on-surface antialiased font-body-md selection:bg-primary/30 selection:text-primary">
+<!-- SideNavBar -->
+<nav class="w-[72px] h-screen fixed left-0 top-0 border-r border-outline-variant dark:border-outline-variant bg-background dark:bg-background flex flex-col items-center py-sidebar_width gap-stack_gap z-20 hidden md:flex">
+<!-- Logo -->
+<div aria-label="Lynx Logo" class="mb-8 font-headline-md text-headline-md text-primary font-bold">
+            Lx
+        </div>
+<!-- Navigation Tabs -->
+<a class="relative flex items-center justify-center h-12 w-12 rounded-xl bg-primary text-on-primary shadow-sm hover:bg-surface-variant transition-colors duration-200 scale-95 transition-transform" href="#" title="Dashboard">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+</a>
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="#" title="CPU">
+<span class="material-symbols-outlined" data-icon="memory">memory</span>
+</a>
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="#" title="GPU">
+<span class="material-symbols-outlined" data-icon="videogame_asset">videogame_asset</span>
+</a>
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="#" title="Memory">
+<span class="material-symbols-outlined" data-icon="storage">storage</span>
+</a>
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="#" title="Storage">
+<span class="material-symbols-outlined" data-icon="hard_drive">hard_drive</span>
+</a>
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200" href="#" title="Network">
+<span class="material-symbols-outlined" data-icon="language">language</span>
+</a>
+<a class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 mt-auto" href="#" title="Settings">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</a>
+</nav>
+<!-- TopAppBar -->
+<header class="h-16 fixed top-0 right-0 left-0 md:left-[72px] z-10 border-b border-outline-variant bg-background/80 backdrop-blur-md flex items-center justify-between px-container_padding w-full">
+<div class="flex items-center gap-4">
+<div class="md:hidden font-headline-md text-headline-md font-bold text-primary">Lx</div>
+<h1 class="font-title-sm text-title-sm">Lynx</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-100 hover:opacity-80">
+<span class="material-symbols-outlined" data-icon="refresh">refresh</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-100 hover:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-100 hover:opacity-80">
+<span class="material-symbols-outlined" data-icon="power_settings_new">power_settings_new</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-12 px-4 md:px-container_padding md:ml-[72px] min-h-screen">
+<!-- Dashboard Header -->
+<div class="mb-8 flex justify-between items-end">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface">System Dashboard</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Real-time performance overview</p>
+</div>
+<div class="hidden md:flex gap-3">
+<button class="bg-primary-container text-on-primary-container px-4 py-2 rounded-lg font-title-sm text-title-sm flex items-center gap-2 hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined" data-icon="cleaning_services">cleaning_services</span>
+                    Clean Cache
+                </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-grid_gutter">
+<!-- Progress Rings Section (Spans full width on mobile, 8 cols on desktop) -->
+<div class="col-span-1 md:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-grid_gutter">
+<!-- CPU Ring -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-card_padding flex flex-col items-center justify-center">
+<h3 class="font-title-sm text-title-sm text-on-surface w-full text-center mb-1">CPU</h3>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-2 w-full text-center">Intel Core i9</p>
+<div class="relative w-32 h-32">
+<svg class="circular-chart w-full h-full" viewBox="0 0 36 36">
+<path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+<path class="circle stroke-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke-dasharray="65, 100"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md text-on-surface">65%</span>
+<span class="font-data-mono text-data-mono text-primary">3.8 GHz</span>
+</div>
+</div>
+</div>
+<!-- Memory Ring -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-card_padding flex flex-col items-center justify-center">
+<h3 class="font-title-sm text-title-sm text-on-surface w-full text-center mb-1">Memory</h3>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-2 w-full text-center">32 GB DDR5</p>
+<div class="relative w-32 h-32">
+<svg class="circular-chart w-full h-full" viewBox="0 0 36 36">
+<path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+<path class="circle stroke-tertiary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke-dasharray="82, 100"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md text-on-surface">82%</span>
+<span class="font-data-mono text-data-mono text-tertiary">26.2 GB</span>
+</div>
+</div>
+</div>
+<!-- Disk Ring -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-card_padding flex flex-col items-center justify-center">
+<h3 class="font-title-sm text-title-sm text-on-surface w-full text-center mb-1">Disk</h3>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-2 w-full text-center">NVMe Gen4</p>
+<div class="relative w-32 h-32">
+<svg class="circular-chart w-full h-full" viewBox="0 0 36 36">
+<path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+<path class="circle stroke-secondary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke-dasharray="45, 100"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md text-on-surface">45%</span>
+<span class="font-data-mono text-data-mono text-secondary">450 GB</span>
+</div>
+</div>
+</div>
+<!-- Network Ring -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-card_padding flex flex-col items-center justify-center">
+<h3 class="font-title-sm text-title-sm text-on-surface w-full text-center mb-1">Network</h3>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-2 w-full text-center">eth0</p>
+<div class="relative w-32 h-32">
+<svg class="circular-chart w-full h-full" viewBox="0 0 36 36">
+<path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+<path class="circle stroke-primary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke-dasharray="20, 100"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md text-on-surface">20%</span>
+<span class="font-data-mono text-data-mono text-primary-container text-center leading-tight">125<br>MB/s</span>
+</div>
+</div>
+</div>
+</div>
+<!-- System Info (Spans 4 cols on desktop) -->
+<div class="col-span-1 md:col-span-4 bg-surface-container border border-outline-variant rounded-xl p-card_padding flex flex-col">
+<h3 class="font-title-sm text-title-sm text-on-surface mb-4 flex items-center gap-2 border-b border-outline-variant pb-2">
+<span class="material-symbols-outlined" data-icon="info">info</span>
+                    System Info
+                </h3>
+<div class="flex-grow flex flex-col justify-between gap-4">
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Hostname</span>
+<span class="font-data-mono text-data-mono text-on-surface">lynx-server-01</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Platform</span>
+<span class="font-data-mono text-data-mono text-on-surface">Ubuntu 24.04 LTS</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Kernel</span>
+<span class="font-data-mono text-data-mono text-on-surface">6.8.0-31-generic</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Uptime</span>
+<span class="font-data-mono text-data-mono text-primary">14d 6h 32m</span>
+</div>
+</div>
+</div>
+<!-- GPU Status Card (Spans 6 cols) -->
+<div class="col-span-1 md:col-span-6 bg-surface-container border border-outline-variant rounded-xl p-card_padding flex flex-col">
+<div class="flex justify-between items-center mb-4 border-b border-outline-variant pb-2">
+<h3 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="videogame_asset">videogame_asset</span>
+                        GPU Status
+                    </h3>
+<div class="relative group">
+  <button class="flex items-center gap-1 font-label-caps text-label-caps text-tertiary bg-tertiary/10 px-2 py-1 rounded hover:bg-tertiary/20 transition-colors">
+    <span class="">GPU 0: NVIDIA RTX 4090</span>
+    <span class="material-symbols-outlined text-sm">expand_more</span>
+  </button>
+  <div class="absolute right-0 mt-1 w-48 bg-surface-container-high border border-outline-variant rounded shadow-lg hidden group-hover:block z-20">
+    <div class="p-2 hover:bg-surface-variant cursor-pointer transition-colors">
+      <p class="font-label-caps text-label-caps text-tertiary">GPU 0: NVIDIA RTX 4090</p>
+    </div>
+    <div class="p-2 hover:bg-surface-variant cursor-pointer transition-colors border-t border-outline-variant">
+      <p class="font-label-caps text-label-caps text-on-surface-variant">GPU 1: Intel UHD</p>
+    </div>
+  </div>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center mb-1">
+<span class="font-body-md text-body-md text-on-surface-variant">Utilization</span>
+<span class="font-data-mono text-data-mono text-on-surface">88%</span>
+</div>
+<div class="w-full bg-surface-bright rounded-full h-2 mb-4">
+<div class="bg-tertiary h-2 rounded-full" style="width: 88%"></div>
+</div>
+<div class="flex justify-between items-center mb-1">
+<span class="font-body-md text-body-md text-on-surface-variant">VRAM Usage</span>
+<span class="font-data-mono text-data-mono text-on-surface">18.5 / 24 GB</span>
+</div>
+<div class="w-full bg-surface-bright rounded-full h-2 mb-4">
+<div class="bg-secondary h-2 rounded-full" style="width: 77%"></div>
+</div>
+<div class="flex justify-between items-center mt-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="device_thermostat">device_thermostat</span>
+<span class="font-data-mono text-data-mono text-on-surface">62°C</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="mode_fan">mode_fan</span>
+<span class="font-data-mono text-data-mono text-on-surface">1800 RPM</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="bolt">bolt</span>
+<span class="font-data-mono text-data-mono text-on-surface">320W</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Terminal / Quick Actions (Spans 6 cols) -->
+<div class="col-span-1 md:col-span-6 bg-[#11111B] border border-outline-variant rounded-xl p-card_padding flex flex-col relative overflow-hidden">
+<div class="flex justify-between items-center mb-4 border-b border-surface-variant pb-2">
+<h3 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+                        Activity Log
+                    </h3>
+<span class="flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-tertiary"></span>
+</span>
+</div>
+<div class="font-code-terminal text-code-terminal text-on-surface-variant flex-grow flex flex-col gap-1 overflow-y-auto max-h-48">
+<p class=""><span class="text-tertiary">lynx@server</span><span class="text-on-surface">:</span><span class="text-primary">~</span>$ tail -f /var/log/syslog</p>
+<p class="text-outline">May 15 10:23:45 server systemd[1]: Started Docker Application Container Engine.</p>
+<p class="text-outline">May 15 10:24:12 server kernel: [ 45.123456] eth0: link up, 1000Mbps, full-duplex, lpa 0x1C00</p>
+<p class="text-outline">May 15 10:28:01 server CRON[1234]: (root) CMD ( /usr/local/bin/backup.sh)</p>
+<p class="text-outline">May 15 10:35:10 server sshd[4567]: Accepted publickey for root from 192.168.1.50 port 54321</p>
+<p class="text-outline">May 15 10:40:05 server systemd-resolved[890]: Server returned error NXDOMAIN, mitigating potential DNS violation DVE-2018-0001, retrying transaction with reduced feature level UDP.</p>
+</div>
+<!-- Overlay Quick Actions for Terminal Area -->
+<div class="absolute bottom-4 right-4 flex gap-2">
+<button class="bg-error text-on-error px-3 py-1.5 rounded text-sm font-semibold flex items-center gap-1 hover:bg-error-container transition-colors shadow-lg">
+<span class="material-symbols-outlined text-sm" data-icon="dangerous">dangerous</span>
+                        Kill Heavy
+                    </button>
+</div>
+</div>
+</div>
+</main>
+
+
+</body></html>

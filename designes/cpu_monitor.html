@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lynx - CPU Monitor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#002205",
+                        "surface-container-lowest": "#0d0d1c",
+                        "on-surface-variant": "#c3c6d2",
+                        "background": "#121221",
+                        "inverse-on-surface": "#2f2f40",
+                        "error": "#ffb4ab",
+                        "surface-dim": "#121221",
+                        "on-secondary-container": "#b4b3ca",
+                        "on-background": "#e3e0f7",
+                        "on-primary": "#003062",
+                        "tertiary-fixed-dim": "#99d595",
+                        "secondary-fixed-dim": "#c5c4dc",
+                        "surface": "#121221",
+                        "inverse-primary": "#305f9f",
+                        "on-primary-fixed": "#001b3c",
+                        "secondary-container": "#444558",
+                        "primary": "#b5cfff",
+                        "secondary-fixed": "#e1e0f8",
+                        "on-error-container": "#ffdad6",
+                        "error-container": "#93000a",
+                        "surface-container-high": "#292839",
+                        "surface-variant": "#333344",
+                        "on-tertiary-container": "#174f1e",
+                        "surface-container-low": "#1a1a2a",
+                        "on-surface": "#e3e0f7",
+                        "on-tertiary-fixed-variant": "#19511f",
+                        "surface-tint": "#a8c8ff",
+                        "on-tertiary": "#00390c",
+                        "on-primary-container": "#094583",
+                        "tertiary-fixed": "#b4f2af",
+                        "surface-bright": "#383849",
+                        "on-secondary-fixed-variant": "#444558",
+                        "outline-variant": "#424750",
+                        "inverse-surface": "#e3e0f7",
+                        "on-primary-fixed-variant": "#0e4685",
+                        "secondary": "#c5c4dc",
+                        "surface-container": "#1e1e2e",
+                        "on-error": "#690005",
+                        "primary-fixed": "#d5e3ff",
+                        "tertiary-container": "#86c182",
+                        "surface-container-highest": "#333344",
+                        "tertiary": "#a1dd9c",
+                        "primary-container": "#89b4fa",
+                        "primary-fixed-dim": "#a8c8ff",
+                        "on-secondary": "#2e2f41",
+                        "on-secondary-fixed": "#191a2b",
+                        "outline": "#8d919b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar_width": "72px",
+                        "container_padding": "24px",
+                        "stack_gap": "8px",
+                        "grid_gutter": "16px",
+                        "card_padding": "20px"
+                    },
+                    "fontFamily": {
+                        "data-mono": ["JetBrains Mono", "monospace"],
+                        "code-terminal": ["JetBrains Mono", "monospace"],
+                        "display-lg": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "title-sm": ["Inter", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "label-caps": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "data-mono": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+                        "code-terminal": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .graph-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 5s linear forwards;
+        }
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        .core-bar {
+            transition: height 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<nav class="hidden md:flex w-[72px] h-screen fixed left-0 top-0 border-r border-outline-variant bg-background flex-col items-center py-[24px] gap-stack_gap z-20">
+<div class="mb-8 flex flex-col items-center gap-2">
+<span class="font-headline-md text-headline-md text-primary font-bold">L</span>
+</div>
+<div class="flex flex-col gap-2 w-full px-2">
+<a aria-label="Dashboard" class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+</a>
+<a aria-label="CPU" class="relative flex items-center justify-center h-12 w-12 rounded-xl bg-primary text-on-primary shadow-sm hover:bg-primary/90 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="memory">memory</span>
+</a>
+<a aria-label="GPU" class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#">
+<span class="material-symbols-outlined" data-icon="videogame_asset">videogame_asset</span>
+</a>
+<a aria-label="Memory" class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#">
+<span class="material-symbols-outlined" data-icon="storage">storage</span>
+</a>
+<a aria-label="Storage" class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#">
+<span class="material-symbols-outlined" data-icon="hard_drive">hard_drive</span>
+</a>
+<a aria-label="Network" class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#">
+<span class="material-symbols-outlined" data-icon="language">language</span>
+</a>
+<a aria-label="Processes" class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+</a>
+</div>
+<div class="mt-auto flex flex-col gap-2 w-full px-2">
+<a aria-label="Settings" class="flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl group relative" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</a>
+</div>
+</nav>
+<!-- TopAppBar -->
+<header class="h-16 fixed top-0 right-0 left-0 md:left-[72px] z-10 border-b border-outline-variant bg-background/80 backdrop-blur-md flex items-center justify-between px-container_padding w-full md:w-[calc(100%-72px)]">
+<div class="flex items-center gap-4">
+<span class="md:hidden font-headline-md text-headline-md font-bold text-primary">Lynx</span>
+<div class="hidden md:flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">CPU Performance</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Real-time telemetry</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-variant border-none rounded-full py-1.5 pl-9 pr-4 text-sm focus:ring-1 focus:ring-primary w-48 text-on-surface font-body-md placeholder-on-surface-variant" placeholder="Search..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-100 hover:opacity-80 p-2 rounded-full hover:bg-surface-variant">
+<span class="material-symbols-outlined" data-icon="refresh">refresh</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-100 hover:opacity-80 p-2 rounded-full hover:bg-surface-variant relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-100 hover:opacity-80 p-2 rounded-full hover:bg-surface-variant">
+<span class="material-symbols-outlined" data-icon="power_settings_new">power_settings_new</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pt-[88px] pb-container_padding px-container_padding md:pl-[96px] min-h-screen">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-grid_gutter max-w-7xl mx-auto">
+<!-- CPU Info & Load Average (Bento Left) -->
+<div class="md:col-span-4 flex flex-col gap-grid_gutter">
+<!-- Processor Info Card -->
+<div class="bg-surface-container rounded-xl border border-surface-variant p-card_padding flex flex-col gap-4 relative overflow-hidden">
+<div class="absolute -right-8 -top-8 w-32 h-32 bg-primary/5 rounded-full blur-2xl"></div>
+<div>
+<h2 class="font-title-sm text-title-sm text-on-surface">Processor Info</h2>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Hardware Details</span>
+</div>
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-variant flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="memory">memory</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">AMD Ryzen 9 5950X</span>
+<span class="font-body-md text-body-md text-on-surface-variant">16-Core Processor</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-2">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Architecture</span>
+<span class="font-data-mono text-data-mono text-on-surface">Zen 3</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Sockets / Cores</span>
+<span class="font-data-mono text-data-mono text-on-surface">1 / 16 (32t)</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Base Clock</span>
+<span class="font-data-mono text-data-mono text-on-surface">3.40 GHz</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Boost Clock</span>
+<span class="font-data-mono text-data-mono text-primary">4.90 GHz</span>
+</div>
+</div>
+</div>
+<!-- Load Average Card -->
+<div class="bg-surface-container rounded-xl border border-surface-variant p-card_padding flex flex-col gap-4">
+<div>
+<h2 class="font-title-sm text-title-sm text-on-surface">Load Average</h2>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">System Queue</span>
+</div>
+<div class="flex justify-between items-end mt-2">
+<div class="flex flex-col items-center">
+<span class="font-display-lg text-display-lg text-on-surface">1.24</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">1 MIN</span>
+</div>
+<div class="w-px h-10 bg-surface-variant mx-2"></div>
+<div class="flex flex-col items-center">
+<span class="font-display-lg text-display-lg text-on-surface">0.98</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">5 MIN</span>
+</div>
+<div class="w-px h-10 bg-surface-variant mx-2"></div>
+<div class="flex flex-col items-center">
+<span class="font-display-lg text-display-lg text-on-surface">0.85</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">15 MIN</span>
+</div>
+</div>
+</div>
+<!-- Global Temperature -->
+<div class="bg-surface-container rounded-xl border border-surface-variant p-card_padding flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">Package Temp</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Tctl/Tdie</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error" data-icon="device_thermostat">device_thermostat</span>
+<span class="font-display-lg text-display-lg text-on-surface">62°C</span>
+</div>
+</div>
+</div>
+<!-- Main Telemetry (Bento Right) -->
+<div class="md:col-span-8 flex flex-col gap-grid_gutter">
+<!-- Real-time Frequency Graph -->
+<div class="bg-surface-container rounded-xl border border-surface-variant p-card_padding flex flex-col gap-4 h-64 md:h-auto md:flex-grow relative overflow-hidden">
+<div class="flex justify-between items-start z-10">
+<div>
+<h2 class="font-title-sm text-title-sm text-on-surface">Frequency &amp; Usage History</h2>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Past 60 Seconds</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Freq</span>
+</div>
+<div class="flex items-center gap-1">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Usage</span>
+</div>
+</div>
+</div>
+<!-- Decorative Graph Area -->
+<div class="absolute inset-0 pt-16 px-4 pb-4 flex items-end">
+<svg class="w-full h-full preserve-aspect-none" preserveaspectratio="none" viewbox="0 0 100 40">
+<defs>
+<lineargradient id="gradient-primary" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#89b4fa" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#89b4fa" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid lines -->
+<line stroke="#333344" stroke-dasharray="2 2" stroke-width="0.5" x1="0" x2="100" y1="10" y2="10"></line>
+<line stroke="#333344" stroke-dasharray="2 2" stroke-width="0.5" x1="0" x2="100" y1="20" y2="20"></line>
+<line stroke="#333344" stroke-dasharray="2 2" stroke-width="0.5" x1="0" x2="100" y1="30" y2="30"></line>
+<!-- Area Fill -->
+<path d="M0,40 L0,25 Q10,15 20,20 T40,10 T60,25 T80,15 T100,5 L100,40 Z" fill="url(#gradient-primary)"></path>
+<!-- Line (Frequency) -->
+<path class="graph-line" d="M0,25 Q10,15 20,20 T40,10 T60,25 T80,15 T100,5" fill="none" stroke="#89b4fa" stroke-width="1.5"></path>
+<!-- Line (Usage - muted) -->
+<path d="M0,35 Q15,30 30,38 T60,32 T90,36 T100,30" fill="none" stroke="#a1dd9c" stroke-opacity="0.6" stroke-width="1"></path>
+</svg>
+</div>
+</div>
+<!-- Per-Core Bars (8 shown for layout, implies 16) -->
+<div class="bg-surface-container rounded-xl border border-surface-variant p-card_padding flex flex-col gap-4">
+<div class="flex justify-between items-center mb-2">
+<div>
+<h2 class="font-title-sm text-title-sm text-on-surface">Core Utilization</h2>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Logical Processors (0-7)</span>
+</div>
+<button class="text-xs font-label-caps text-primary hover:text-primary-container">SHOW ALL 16</button>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-4 h-48">
+<!-- Core 0 -->
+<div class="flex flex-col items-center gap-2 h-full">
+<div class="w-full bg-surface-variant rounded-full h-full relative overflow-hidden flex items-end">
+<div class="w-full bg-primary core-bar rounded-full" style="height: 45%;"></div>
+</div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">C0</span>
+<span class="font-label-caps text-label-caps text-on-surface">45%</span>
+<span class="text-[9px] text-on-surface-variant">42°</span>
+</div>
+<!-- Core 1 -->
+<div class="flex flex-col items-center gap-2 h-full">
+<div class="w-full bg-surface-variant rounded-full h-full relative overflow-hidden flex items-end">
+<div class="w-full bg-tertiary core-bar rounded-full" style="height: 12%;"></div>
+</div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">C1</span>
+<span class="font-label-caps text-label-caps text-on-surface">12%</span>
+<span class="text-[9px] text-on-surface-variant">38°</span>
+</div>
+<!-- Core 2 -->
+<div class="flex flex-col items-center gap-2 h-full">
+<div class="w-full bg-surface-variant rounded-full h-full relative overflow-hidden flex items-end">
+<div class="w-full bg-error core-bar rounded-full" style="height: 88%;"></div>
+</div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">C2</span>
+<span class="font-label-caps text-label-caps text-on-surface">88%</span>
+<span class="text-[9px] text-error">71°</span>
+</div>
+<!-- Core 3 -->
+<div class="flex flex-col items-center gap-2 h-full">
+<div class="w-full bg-surface-variant rounded-full h-full relative overflow-hidden flex items-end">
+<div class="w-full bg-primary core-bar rounded-full" style="height: 34%;"></div>
+</div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">C3</span>
+<span class="font-label-caps text-label-caps text-on-surface">34%</span>
+<span class="text-[9px] text-on-surface-variant">40°</span>
+</div>
+<!-- Core 4 -->
+<div class="flex flex-col items-center gap-2 h-full">
+<div class="w-full bg-surface-variant rounded-full h-full relative overflow-hidden flex items-end">
+<div class="w-full bg-tertiary core-bar rounded-full" style="height: 8%;"></div>
+</div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">C4</span>
+<span class="font-label-caps text-label-caps text-on-surface">8%</span>
+<span class="text-[9px] text-on-surface-variant">37°</span>
+</div>
+<!-- Core 5 -->
+<div class="flex flex-col items-center gap-2 h-full">
+<div class="w-full bg-surface-variant rounded-full h-full relative overflow-hidden flex items-end">
+<div class="w-full bg-primary core-bar rounded-full" style="height: 56%;"></div>
+</div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">C5</span>
+<span class="font-label-caps text-label-caps text-on-surface">56%</span>
+<span class="text-[9px] text-on-surface-variant">45°</span>
+</div>
+<!-- Core 6 -->
+<div class="flex flex-col items-center gap-2 h-full">
+<div class="w-full bg-surface-variant rounded-full h-full relative overflow-hidden flex items-end">
+<div class="w-full bg-primary core-bar rounded-full" style="height: 41%;"></div>
+</div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">C6</span>
+<span class="font-label-caps text-label-caps text-on-surface">41%</span>
+<span class="text-[9px] text-on-surface-variant">41°</span>
+</div>
+<!-- Core 7 -->
+<div class="flex flex-col items-center gap-2 h-full">
+<div class="w-full bg-surface-variant rounded-full h-full relative overflow-hidden flex items-end">
+<div class="w-full bg-tertiary core-bar rounded-full" style="height: 15%;"></div>
+</div>
+<span class="font-data-mono text-data-mono text-on-surface-variant">C7</span>
+<span class="font-label-caps text-label-caps text-on-surface">15%</span>
+<span class="text-[9px] text-on-surface-variant">39°</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple script to randomly animate core bars for a "live" feel
+        setInterval(() => {
+            document.querySelectorAll('.core-bar').forEach(bar => {
+                // Don't change the high load one too much to keep the warning visible
+                if(!bar.classList.contains('bg-error')) {
+                     const newHeight = Math.floor(Math.random() * 60) + 10;
+                     bar.style.height = `${newHeight}%`;
+                     
+                     // Update the label text below it
+                     const parent = bar.closest('div.flex-col');
+                     if(parent) {
+                        const percentLabel = parent.querySelectorAll('span')[1];
+                        if(percentLabel) percentLabel.textContent = `${newHeight}%`;
+                     }
+                }
+            });
+        }, 2000);
+    </script>
+</body></html>

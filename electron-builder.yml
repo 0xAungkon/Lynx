@@ -1,0 +1,24 @@
+appId: com.lynx.app
+productName: Lynx
+directories:
+  output: dist
+  buildResources: build
+files:
+  - out/**/*
+  - resources/**/*
+linux:
+  category: System
+  target:
+    - deb
+    - pacman
+    - AppImage
+  desktop:
+    Name: Lynx
+    Comment: Monitor and manage your Linux system
+    Categories: System;Monitor;Utility;
+# polkit policy shipped for privileged actions (see idea.md §5); wired up in a later phase.
+extraResources:
+  - from: resources
+    to: resources
+    filter:
+      - "**/*"

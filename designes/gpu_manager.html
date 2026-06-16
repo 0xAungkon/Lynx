@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lynx - GPU Monitor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface": "#121221",
+                      "outline-variant": "#424750",
+                      "on-error-container": "#ffdad6",
+                      "surface-dim": "#121221",
+                      "primary": "#b5cfff",
+                      "on-tertiary-fixed-variant": "#19511f",
+                      "on-secondary-fixed": "#191a2b",
+                      "on-primary-fixed-variant": "#0e4685",
+                      "on-tertiary-fixed": "#002205",
+                      "on-background": "#e3e0f7",
+                      "background": "#121221",
+                      "surface-container-high": "#292839",
+                      "primary-container": "#89b4fa",
+                      "secondary": "#c5c4dc",
+                      "secondary-fixed": "#e1e0f8",
+                      "outline": "#8d919b",
+                      "tertiary": "#a1dd9c",
+                      "surface-bright": "#383849",
+                      "error-container": "#93000a",
+                      "on-secondary-fixed-variant": "#444558",
+                      "on-surface-variant": "#c3c6d2",
+                      "error": "#ffb4ab",
+                      "inverse-primary": "#305f9f",
+                      "on-primary-fixed": "#001b3c",
+                      "primary-fixed-dim": "#a8c8ff",
+                      "on-tertiary-container": "#174f1e",
+                      "surface-container": "#1e1e2e",
+                      "on-primary-container": "#094583",
+                      "inverse-on-surface": "#2f2f40",
+                      "secondary-container": "#444558",
+                      "on-surface": "#e3e0f7",
+                      "on-secondary": "#2e2f41",
+                      "on-tertiary": "#00390c",
+                      "secondary-fixed-dim": "#c5c4dc",
+                      "primary-fixed": "#d5e3ff",
+                      "tertiary-fixed-dim": "#99d595",
+                      "surface-container-highest": "#333344",
+                      "tertiary-fixed": "#b4f2af",
+                      "surface-container-low": "#1a1a2a",
+                      "tertiary-container": "#86c182",
+                      "inverse-surface": "#e3e0f7",
+                      "surface-tint": "#a8c8ff",
+                      "on-primary": "#003062",
+                      "on-secondary-container": "#b4b3ca",
+                      "on-error": "#690005",
+                      "surface-container-lowest": "#0d0d1c",
+                      "surface-variant": "#333344"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "grid_gutter": "16px",
+                      "card_padding": "20px",
+                      "sidebar_width": "72px",
+                      "stack_gap": "8px",
+                      "container_padding": "24px"
+              },
+              "fontFamily": {
+                      "title-sm": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "data-mono": [
+                              "JetBrains Mono"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "code-terminal": [
+                              "JetBrains Mono"
+                      ]
+              },
+              "fontSize": {
+                      "title-sm": [
+                              "18px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-caps": [
+                              "11px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "data-mono": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "code-terminal": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-surface');
+        }
+        .gauge-svg {
+            transform: rotate(-135deg);
+        }
+        .gauge-track {
+            stroke: theme('colors.surface-variant');
+            stroke-width: 8;
+            fill: transparent;
+            stroke-linecap: round;
+        }
+        .gauge-fill {
+            stroke: theme('colors.primary-container');
+            stroke-width: 8;
+            fill: transparent;
+            stroke-linecap: round;
+            stroke-dasharray: 251.2; /* 2 * pi * r (r=40) */
+            transition: stroke-dashoffset 0.5s ease;
+        }
+        .gauge-fill-accent {
+            stroke: theme('colors.tertiary');
+        }
+        .gauge-fill-warning {
+             stroke: theme('colors.error');
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<nav class="w-[72px] h-screen fixed left-0 top-0 bg-background dark:bg-background border-r border-outline-variant dark:border-outline-variant flex flex-col items-center py-sidebar_width gap-stack_gap z-20">
+<div class="mb-8 group relative flex flex-col items-center">
+<span class="font-headline-md text-headline-md text-primary font-bold">L</span>
+</div>
+<!-- Dashboard -->
+<a class="group relative flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl" href="#" title="Dashboard">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+</a>
+<!-- CPU -->
+<a class="group relative flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl" href="#" title="CPU">
+<span class="material-symbols-outlined" data-icon="memory">memory</span>
+</a>
+<!-- GPU (Active) -->
+<a class="relative flex items-center justify-center h-12 w-12 rounded-xl bg-primary text-on-primary shadow-sm scale-95 transition-transform" href="#" title="GPU">
+<span class="material-symbols-outlined" data-icon="videogame_asset">videogame_asset</span>
+</a>
+<!-- Memory -->
+<a class="group relative flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl" href="#" title="Memory">
+<span class="material-symbols-outlined" data-icon="storage">storage</span>
+</a>
+<!-- Storage -->
+<a class="group relative flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl" href="#" title="Storage">
+<span class="material-symbols-outlined" data-icon="hard_drive">hard_drive</span>
+</a>
+<!-- Network -->
+<a class="group relative flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl" href="#" title="Network">
+<span class="material-symbols-outlined" data-icon="language">language</span>
+</a>
+<!-- Processes -->
+<a class="group relative flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl" href="#" title="Processes">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+</a>
+<!-- Logs -->
+<a class="group relative flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl" href="#" title="Logs">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+</a>
+<!-- Packages -->
+<a class="group relative flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl" href="#" title="Packages">
+<span class="material-symbols-outlined" data-icon="package_2">package_2</span>
+</a>
+<!-- Services -->
+<a class="group relative flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl" href="#" title="Services">
+<span class="material-symbols-outlined" data-icon="settings_suggest">settings_suggest</span>
+</a>
+<!-- Cleaner -->
+<a class="group relative flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl mt-auto" href="#" title="Cleaner">
+<span class="material-symbols-outlined" data-icon="cleaning_services">cleaning_services</span>
+</a>
+<!-- Settings -->
+<a class="group relative flex items-center justify-center h-12 w-12 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant transition-colors duration-200 rounded-xl" href="#" title="Settings">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</a>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 ml-[72px] mt-16 p-container_padding overflow-y-auto bg-background">
+<!-- TopAppBar -->
+<header class="h-16 fixed top-0 right-0 left-[72px] z-10 bg-background/80 backdrop-blur-md border-b border-outline-variant flex items-center justify-between px-container_padding w-[calc(100%-72px)]">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md font-bold text-primary">Lynx</span>
+<span class="text-on-surface-variant font-title-sm text-title-sm">GPU Monitor</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100">
+<span class="material-symbols-outlined" data-icon="refresh">refresh</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100">
+<span class="material-symbols-outlined" data-icon="power_settings_new">power_settings_new</span>
+</button>
+</div>
+</header>
+<div class="max-w-7xl mx-auto space-y-grid_gutter mt-2"><div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-on-primary shadow-sm whitespace-nowrap transition-colors">
+<span class="material-symbols-outlined text-lg">videogame_asset</span>
+<span class="font-title-sm text-sm">GPU 0: NVIDIA RTX 4090</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-variant hover:text-on-surface whitespace-nowrap transition-colors">
+<span class="material-symbols-outlined text-lg">memory</span>
+<span class="font-title-sm text-sm">GPU 1: Intel UHD Graphics</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-variant hover:text-on-surface whitespace-nowrap transition-colors">
+<span class="material-symbols-outlined text-lg">add</span>
+<span class="font-title-sm text-sm">External GPU</span>
+</button>
+</div>
+<!-- GPU Header Section -->
+<section class="bg-surface-container rounded-xl border border-outline-variant p-card_padding flex justify-between items-center">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-surface mb-1">NVIDIA GeForce RTX 4090</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Driver Version: 535.104.05 • CUDA 12.2</p>
+</div>
+<div class="text-right">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-surface-variant text-primary font-data-mono text-data-mono">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span> Active
+                    </span>
+</div>
+</section>
+<!-- Core Telemetry Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-grid_gutter">
+<!-- Utilization -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding flex flex-col items-center justify-center relative">
+<h2 class="font-title-sm text-title-sm text-on-surface mb-2 w-full text-left">Utilization</h2>
+<div class="relative w-32 h-32 flex items-center justify-center mt-2">
+<svg class="w-full h-full gauge-svg" viewbox="0 0 100 100">
+<circle class="gauge-track" cx="50" cy="50" r="40" stroke-dasharray="188.4 251.2"></circle>
+<circle class="gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: 130;"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center mt-4">
+<span class="font-headline-md text-headline-md text-on-surface">42%</span>
+</div>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-4 uppercase">Core Load</span>
+</div>
+<!-- VRAM Usage -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding flex flex-col items-center justify-center relative">
+<h2 class="font-title-sm text-title-sm text-on-surface mb-2 w-full text-left">VRAM Usage</h2>
+<div class="relative w-32 h-32 flex items-center justify-center mt-2">
+<svg class="w-full h-full gauge-svg" viewbox="0 0 100 100">
+<circle class="gauge-track" cx="50" cy="50" r="40" stroke-dasharray="188.4 251.2"></circle>
+<circle class="gauge-fill gauge-fill-accent" cx="50" cy="50" r="40" style="stroke-dashoffset: 160;"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center mt-4">
+<span class="font-headline-md text-headline-md text-on-surface">8.5<span class="text-sm">GB</span></span>
+</div>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-4 uppercase">of 24.0 GB</span>
+</div>
+<!-- Temperature & Power Stack -->
+<div class="flex flex-col gap-grid_gutter lg:col-span-2">
+<!-- Temperature -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding flex-1 flex items-center justify-between">
+<div>
+<h2 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-xl" data-icon="device_thermostat">device_thermostat</span>
+                                Temperature
+                            </h2>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1 uppercase">Target: 83°C</p>
+</div>
+<div class="text-right flex items-baseline gap-1">
+<span class="font-display-lg text-display-lg text-on-surface">68°C</span>
+</div>
+</div>
+<!-- Power Draw -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding flex-1 flex items-center justify-between">
+<div>
+<h2 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-xl" data-icon="bolt">bolt</span>
+                                Power Draw
+                            </h2>
+<div class="w-full bg-surface-variant h-2 rounded-full mt-3 overflow-hidden w-32">
+<div class="bg-error h-full" style="width: 26%;"></div>
+</div>
+</div>
+<div class="text-right">
+<span class="font-display-lg text-display-lg text-on-surface">120<span class="text-lg">W</span></span>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1 uppercase">/ 450W Limit</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Graph & Details Row -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-grid_gutter">
+<!-- Performance Graph -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding lg:col-span-2 flex flex-col h-80">
+<div class="flex justify-between items-center mb-4">
+<h2 class="font-title-sm text-title-sm text-on-surface">Performance History</h2>
+<div class="flex gap-4">
+<span class="flex items-center gap-2 font-label-caps text-label-caps text-on-surface-variant"><span class="w-3 h-3 rounded-sm bg-primary-container"></span> Load</span>
+<span class="flex items-center gap-2 font-label-caps text-label-caps text-on-surface-variant"><span class="w-3 h-3 rounded-sm bg-tertiary"></span> Temp</span>
+</div>
+</div>
+<!-- Placeholder for Chart -->
+<div class="flex-1 bg-surface-variant/20 border border-outline-variant/30 rounded-lg relative overflow-hidden flex items-end px-2 pb-2 pt-4">
+<!-- Abstract simulated chart path -->
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<path d="M0,100 L0,60 Q10,70 20,50 T40,40 T60,65 T80,30 T100,20 L100,100 Z" fill="theme('colors.primary-container')" fill-opacity="0.1" stroke="theme('colors.primary-container')" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<path d="M0,100 L0,80 Q15,85 30,75 T50,70 T70,75 T90,60 T100,65 L100,100 Z" fill="transparent" stroke="theme('colors.tertiary')" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20 py-2">
+<div class="w-full border-t border-outline-variant"></div>
+<div class="w-full border-t border-outline-variant"></div>
+<div class="w-full border-t border-outline-variant"></div>
+<div class="w-full border-t border-outline-variant"></div>
+</div>
+</div>
+</div>
+<!-- Stats & Fan Column -->
+<div class="flex flex-col gap-grid_gutter">
+<!-- Clock Speeds -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding">
+<h2 class="font-title-sm text-title-sm text-on-surface mb-4">Clock Speeds</h2>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between mb-1">
+<span class="font-body-md text-body-md text-on-surface-variant">GPU Core</span>
+<span class="font-data-mono text-data-mono text-on-surface">2520 MHz</span>
+</div>
+<div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full" style="width: 85%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="font-body-md text-body-md text-on-surface-variant">Memory</span>
+<span class="font-data-mono text-data-mono text-on-surface">10501 MHz</span>
+</div>
+<div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full" style="width: 90%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Fan Control -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding flex-1">
+<h2 class="font-title-sm text-title-sm text-on-surface mb-4 flex items-center justify-between">
+<span>Cooling</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="mode_fan">mode_fan</span>
+</h2>
+<div class="flex items-center gap-4">
+<div class="relative w-16 h-16 flex items-center justify-center">
+<svg class="w-full h-full gauge-svg" viewbox="0 0 100 100">
+<circle class="gauge-track" cx="50" cy="50" r="40" stroke-dasharray="188.4 251.2"></circle>
+<circle class="gauge-fill" cx="50" cy="50" r="40" style="stroke-dashoffset: 188.4;"></circle>
+</svg>
+<span class="absolute font-data-mono text-sm">30%</span>
+</div>
+<div>
+<p class="font-display-lg text-display-lg text-on-surface leading-none">1250 <span class="text-sm font-normal text-on-surface-variant">RPM</span></p>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1 uppercase">Auto Control</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Process List -->
+<div class="bg-surface-container rounded-xl border border-outline-variant overflow-hidden">
+<div class="p-card_padding border-b border-outline-variant bg-surface-container-high">
+<h2 class="font-title-sm text-title-sm text-on-surface">GPU Processes (NVIDIA RTX 4090)</h2>
+<div class="mt-3 flex items-center gap-2">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full bg-surface-variant/30 border-none rounded-lg py-1.5 pl-9 pr-4 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:ring-1 focus:ring-primary" placeholder="Filter processes..." type="text"/>
+</div>
+<button class="p-1.5 rounded-lg bg-surface-variant/30 text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+</button>
+</div></div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-variant/30 text-on-surface-variant font-label-caps text-label-caps uppercase border-b border-outline-variant/50">
+<th class="py-3 px-4 font-semibold">PID</th>
+<th class="py-3 px-4 font-semibold">Process Name</th>
+<th class="py-3 px-4 font-semibold">Type</th>
+<th class="py-3 px-4 font-semibold text-right">VRAM Usage</th>
+</tr>
+</thead>
+<tbody class="font-data-mono text-data-mono text-on-surface divide-y divide-outline-variant/30">
+<tr class="hover:bg-surface-variant/20 transition-colors">
+<td class="py-3 px-4 text-on-surface-variant">1423</td>
+<td class="py-3 px-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="terminal">terminal</span>
+                                    Xorg
+                                </td>
+<td class="py-3 px-4 text-on-surface-variant text-xs">C+G</td>
+<td class="py-3 px-4 text-right">152 MiB</td>
+</tr>
+<tr class="hover:bg-surface-variant/20 transition-colors">
+<td class="py-3 px-4 text-on-surface-variant">2055</td>
+<td class="py-3 px-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-tertiary" data-icon="window">window</span>
+                                    gnome-shell
+                                </td>
+<td class="py-3 px-4 text-on-surface-variant text-xs">C+G</td>
+<td class="py-3 px-4 text-right">280 MiB</td>
+</tr>
+<tr class="hover:bg-surface-variant/20 transition-colors bg-primary/5">
+<td class="py-3 px-4 text-on-surface-variant">8942</td>
+<td class="py-3 px-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-error" data-icon="videogame_asset">videogame_asset</span>
+                                    cyberpunk2077.exe
+                                </td>
+<td class="py-3 px-4 text-on-surface-variant text-xs">C+G</td>
+<td class="py-3 px-4 text-right text-error font-bold">7840 MiB</td>
+</tr>
+<tr class="hover:bg-surface-variant/20 transition-colors">
+<td class="py-3 px-4 text-on-surface-variant">9102</td>
+<td class="py-3 px-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-secondary" data-icon="code">code</span>
+                                    python3 (CUDA)
+                                </td>
+<td class="py-3 px-4 text-on-surface-variant text-xs">C</td>
+<td class="py-3 px-4 text-right">220 MiB</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</body></html>
