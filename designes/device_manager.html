@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Device Manager - Lynx System Manager</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#1e1e2e",
+                    "error": "#ffb4ab",
+                    "inverse-primary": "#305f9f",
+                    "primary-fixed-dim": "#a8c8ff",
+                    "tertiary-container": "#86c182",
+                    "surface": "#121221",
+                    "primary": "#b5cfff",
+                    "on-surface": "#e3e0f7",
+                    "on-secondary-fixed-variant": "#444558",
+                    "inverse-surface": "#e3e0f7",
+                    "on-secondary": "#2e2f41",
+                    "surface-container-low": "#1a1a2a",
+                    "surface-container-high": "#292839",
+                    "on-primary-container": "#094583",
+                    "tertiary": "#a1dd9c",
+                    "on-primary": "#003062",
+                    "inverse-on-surface": "#2f2f40",
+                    "secondary-fixed-dim": "#c5c4dc",
+                    "surface-container-lowest": "#0d0d1c",
+                    "outline": "#8d919b",
+                    "on-secondary-container": "#b4b3ca",
+                    "surface-dim": "#121221",
+                    "primary-fixed": "#d5e3ff",
+                    "surface-bright": "#383849",
+                    "on-tertiary": "#00390c",
+                    "on-tertiary-container": "#174f1e",
+                    "tertiary-fixed": "#b4f2af",
+                    "on-error": "#690005",
+                    "on-background": "#e3e0f7",
+                    "secondary-fixed": "#e1e0f8",
+                    "background": "#121221",
+                    "secondary-container": "#444558",
+                    "secondary": "#c5c4dc",
+                    "on-surface-variant": "#c3c6d2",
+                    "on-primary-fixed": "#001b3c",
+                    "on-primary-fixed-variant": "#0e4685",
+                    "primary-container": "#89b4fa",
+                    "surface-variant": "#333344",
+                    "surface-tint": "#a8c8ff",
+                    "error-container": "#93000a",
+                    "on-secondary-fixed": "#191a2b",
+                    "tertiary-fixed-dim": "#99d595",
+                    "on-tertiary-fixed-variant": "#19511f",
+                    "on-tertiary-fixed": "#002205",
+                    "surface-container-highest": "#333344",
+                    "outline-variant": "#424750",
+                    "on-error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "grid_gutter": "16px",
+                    "container_padding": "24px",
+                    "sidebar_width": "72px",
+                    "stack_gap": "8px",
+                    "card_padding": "20px"
+            },
+            "fontFamily": {
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "code-terminal": [
+                            "JetBrains Mono"
+                    ],
+                    "title-sm": [
+                            "Inter"
+                    ],
+                    "data-mono": [
+                            "JetBrains Mono"
+                    ],
+                    "label-caps": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "body-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "code-terminal": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "title-sm": [
+                            "18px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "data-mono": [
+                            "13px",
+                            {
+                                    "lineHeight": "18px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "label-caps": [
+                            "11px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "display-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+          font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface h-screen w-screen overflow-hidden flex">
+<!-- Shared Component: SideNavBar -->
+<nav class="fixed left-0 top-0 h-full w-[72px] bg-surface border-r border-outline-variant flex flex-col items-center py-container_padding z-50">
+<!-- Brand Avatar -->
+<div class="mb-8 w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center font-display-lg text-display-lg text-on-primary-container font-bold">
+            L
+        </div>
+<!-- Navigation Links -->
+<div class="flex flex-col gap-stack_gap w-full items-center flex-grow">
+<!-- Dashboard -->
+<a class="w-12 h-12 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out" href="#" title="Dashboard">
+<span class="material-symbols-outlined">dashboard</span>
+</a>
+<!-- CPU Monitor -->
+<a class="w-12 h-12 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out" href="#" title="CPU Monitor">
+<span class="material-symbols-outlined">memory</span>
+</a>
+<!-- Memory -->
+<a class="w-12 h-12 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out" href="#" title="Memory">
+<span class="material-symbols-outlined">analytics</span>
+</a>
+<!-- Processes -->
+<a class="w-12 h-12 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out" href="#" title="Processes">
+<span class="material-symbols-outlined">terminal</span>
+</a>
+<!-- Storage -->
+<a class="w-12 h-12 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out" href="#" title="Storage">
+<span class="material-symbols-outlined">storage</span>
+</a>
+<!-- Settings (Active Context for Device Manager) -->
+<a class="w-12 h-12 flex items-center justify-center rounded-lg text-primary relative after:content-[''] after:absolute after:left-0 after:w-1 after:h-8 after:bg-primary after:rounded-full transition-all duration-200 ease-in-out bg-surface-variant" href="#" title="Settings">
+<span class="material-symbols-outlined filled">settings</span>
+</a>
+</div>
+<!-- CTA / Action -->
+<button class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center hover:opacity-90 transition-opacity mb-4" title="Terminal">
+<span class="material-symbols-outlined">code</span>
+</button>
+<!-- Footer Links -->
+<a class="w-12 h-12 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface transition-all duration-200 ease-in-out" href="#" title="Logout">
+<span class="material-symbols-outlined">logout</span>
+</a>
+</nav>
+<!-- Shared Component: TopAppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-72px)] h-16 bg-surface-container border-b border-outline-variant flex justify-between items-center px-grid_gutter ml-[72px] z-40">
+<div class="flex items-center gap-4">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Lynx System Manager</h1>
+</div>
+<!-- Search Bar -->
+<div class="flex-grow max-w-md mx-8">
+<div class="relative flex items-center w-full h-10 rounded-full bg-surface border border-outline-variant focus-within:border-primary transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant ml-3">search</span>
+<input class="w-full bg-transparent border-none text-body-md font-body-md text-on-surface focus:ring-0 placeholder-on-surface-variant/50" placeholder="Search devices, processes..." type="text"/>
+</div>
+</div>
+<!-- Trailing Icons -->
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors duration-150">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors duration-150">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-colors duration-150">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[72px] mt-16 w-[calc(100%-72px)] h-[calc(100vh-64px)] overflow-y-auto p-container_padding bg-surface">
+<!-- Page Header -->
+<div class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Device Manager</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">24 Devices Connected • System operating normally</p>
+</div>
+<!-- Global Actions -->
+<div class="flex gap-3">
+<button class="px-4 py-2 rounded-lg bg-surface-container border border-outline-variant text-on-surface font-body-md text-body-md hover:bg-surface-variant transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+                    Scan for Hardware Changes
+                </button>
+</div>
+</div>
+<!-- Filter Row -->
+<div class="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide border-b border-outline-variant">
+<button class="px-4 py-2 rounded-t-lg bg-surface-container-high border-b-2 border-primary text-primary font-title-sm text-title-sm whitespace-nowrap">
+                All Devices
+            </button>
+<button class="px-4 py-2 rounded-t-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors whitespace-nowrap">
+                Peripherals
+            </button>
+<button class="px-4 py-2 rounded-t-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors whitespace-nowrap">
+                Displays
+            </button>
+<button class="px-4 py-2 rounded-t-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors whitespace-nowrap">
+                Storage
+            </button>
+<button class="px-4 py-2 rounded-t-lg text-on-surface-variant hover:bg-surface-variant hover:text-on-surface font-title-sm text-title-sm transition-colors whitespace-nowrap">
+                Internal Bus
+            </button>
+</div>
+<!-- Layout Grid: List vs Detail -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-grid_gutter h-[calc(100%-140px)]">
+<!-- Left Column: Device List (Bento-style list) -->
+<div class="lg:col-span-2 flex flex-col gap-3 overflow-y-auto pr-2 custom-scrollbar">
+<!-- Device Item: Selected -->
+<div class="bg-surface-container-high border border-primary/50 rounded-lg p-4 flex items-center justify-between cursor-pointer hover:bg-surface-variant transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined filled text-[28px]">keyboard</span>
+</div>
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface">Keychron K8 Pro</h3>
+<div class="flex items-center gap-3 mt-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Bluetooth 5.1</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-code-terminal text-code-terminal text-tertiary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">battery_4_bar</span> 84%
+                                </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="font-body-md text-body-md text-on-surface-variant">Active</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface">chevron_right</span>
+</div>
+</div>
+<!-- Device Item -->
+<div class="bg-surface-container border border-outline-variant rounded-lg p-4 flex items-center justify-between cursor-pointer hover:bg-surface-variant transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[28px]">mouse</span>
+</div>
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface">Logitech MX Master 3</h3>
+<div class="flex items-center gap-3 mt-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">USB Receiver</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-code-terminal text-code-terminal text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">battery_1_bar</span> 12%
+                                </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="font-body-md text-body-md text-on-surface-variant">Active</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface">chevron_right</span>
+</div>
+</div>
+<!-- Device Item -->
+<div class="bg-surface-container border border-outline-variant rounded-lg p-4 flex items-center justify-between cursor-pointer hover:bg-surface-variant transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[28px]">monitor</span>
+</div>
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface">Dell UltraSharp U2720Q</h3>
+<div class="flex items-center gap-3 mt-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">DisplayPort 1.4</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-code-terminal text-code-terminal text-on-surface-variant">60Hz / 4K</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="font-body-md text-body-md text-on-surface-variant">Active</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface">chevron_right</span>
+</div>
+</div>
+<!-- Device Item -->
+<div class="bg-surface-container border border-outline-variant rounded-lg p-4 flex items-center justify-between cursor-pointer hover:bg-surface-variant transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[28px]">usb</span>
+</div>
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface">Anker 7-in-1 Hub</h3>
+<div class="flex items-center gap-3 mt-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">USB 3.2 Gen 2</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-code-terminal text-code-terminal text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">bolt</span> 15W Draw
+                                </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+<span class="font-body-md text-body-md text-on-surface-variant">Idle</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface">chevron_right</span>
+</div>
+</div>
+<!-- Device Item -->
+<div class="bg-surface-container border border-outline-variant rounded-lg p-4 flex items-center justify-between cursor-pointer hover:bg-surface-variant transition-colors group opacity-60">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[28px]">save</span>
+</div>
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface">SanDisk Extreme Portable SSD</h3>
+<div class="flex items-center gap-3 mt-1">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">USB Type-C</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="font-body-md text-body-md text-error">Disconnected</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Detail Panel (Sticky-like behavior within grid) -->
+<div class="lg:col-span-1">
+<div class="bg-surface-container border border-outline-variant rounded-lg p-card_padding h-full flex flex-col shadow-lg shadow-black/20">
+<!-- Detail Header -->
+<div class="flex flex-col items-center text-center pb-6 border-b border-outline-variant">
+<div class="w-20 h-20 rounded-full bg-primary-container/20 flex items-center justify-center text-primary mb-4">
+<span class="material-symbols-outlined filled text-[40px]">keyboard</span>
+</div>
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Keychron K8 Pro</h2>
+<div class="mt-2 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-outline-variant">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="font-body-md text-body-md text-on-surface">Active • Connected</span>
+</div>
+</div>
+<!-- Telemetry / Quick Stats -->
+<div class="py-6 border-b border-outline-variant grid grid-cols-2 gap-4">
+<div class="bg-surface rounded p-3">
+<span class="block font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Battery Level</span>
+<span class="font-data-mono text-data-mono text-tertiary text-lg">84%</span>
+</div>
+<div class="bg-surface rounded p-3">
+<span class="block font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Signal Strength</span>
+<span class="font-data-mono text-data-mono text-on-surface text-lg">-42 dBm</span>
+</div>
+</div>
+<!-- Hardware Info -->
+<div class="py-6 flex-grow overflow-y-auto custom-scrollbar">
+<h4 class="font-title-sm text-title-sm text-on-surface mb-4">Device Identity</h4>
+<dl class="space-y-3">
+<div class="grid grid-cols-3 gap-2">
+<dt class="font-body-md text-body-md text-on-surface-variant">Vendor ID:</dt>
+<dd class="col-span-2 font-code-terminal text-code-terminal text-on-surface bg-[#11111B] p-1 rounded px-2 w-fit">0x05AC</dd>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<dt class="font-body-md text-body-md text-on-surface-variant">Product ID:</dt>
+<dd class="col-span-2 font-code-terminal text-code-terminal text-on-surface bg-[#11111B] p-1 rounded px-2 w-fit">0x024F</dd>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<dt class="font-body-md text-body-md text-on-surface-variant">Bus Path:</dt>
+<dd class="col-span-2 font-code-terminal text-code-terminal text-on-surface bg-[#11111B] p-1 rounded px-2 w-fit break-all">hci0:12:34:56:78:9A:BC</dd>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<dt class="font-body-md text-body-md text-on-surface-variant">Driver:</dt>
+<dd class="col-span-2 font-code-terminal text-code-terminal text-on-surface bg-[#11111B] p-1 rounded px-2 w-fit">hid_generic (v2.1.4)</dd>
+</div>
+</dl>
+</div>
+<!-- Actions -->
+<div class="pt-6 border-t border-outline-variant mt-auto">
+<div class="flex flex-col gap-3">
+<div class="flex gap-3">
+<button class="flex-1 bg-surface border border-outline-variant text-on-surface hover:bg-surface-variant py-2 rounded-lg font-title-sm text-title-sm transition-colors">
+                                    Calibrate
+                                </button>
+<button class="flex-1 bg-primary text-on-primary hover:opacity-90 py-2 rounded-lg font-title-sm text-title-sm transition-opacity">
+                                    Update Driver
+                                </button>
+</div>
+<button class="w-full bg-error/10 border border-error/30 text-error hover:bg-error hover:text-on-error py-2 rounded-lg font-title-sm text-title-sm transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">power_settings_new</span>
+                                Disable Device
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<style>
+        /* Custom subtle scrollbar for inner areas */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #313244;
+            border-radius: 20px;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

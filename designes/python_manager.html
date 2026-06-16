@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lynx - Python Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-background": "#e3e0f7",
+                    "surface-dim": "#121221",
+                    "surface-container-low": "#1a1a2a",
+                    "on-tertiary": "#00390c",
+                    "on-error": "#690005",
+                    "on-secondary-fixed-variant": "#444558",
+                    "surface": "#121221",
+                    "primary-fixed-dim": "#a8c8ff",
+                    "error-container": "#93000a",
+                    "tertiary": "#a1dd9c",
+                    "secondary-fixed": "#e1e0f8",
+                    "on-tertiary-container": "#174f1e",
+                    "on-secondary-container": "#b4b3ca",
+                    "primary-container": "#89b4fa",
+                    "on-surface-variant": "#c3c6d2",
+                    "on-secondary-fixed": "#191a2b",
+                    "on-tertiary-fixed-variant": "#19511f",
+                    "tertiary-fixed": "#b4f2af",
+                    "surface-container-high": "#292839",
+                    "secondary": "#c5c4dc",
+                    "on-error-container": "#ffdad6",
+                    "surface-tint": "#a8c8ff",
+                    "secondary-fixed-dim": "#c5c4dc",
+                    "inverse-primary": "#305f9f",
+                    "surface-container-lowest": "#0d0d1c",
+                    "outline-variant": "#424750",
+                    "on-tertiary-fixed": "#002205",
+                    "inverse-on-surface": "#2f2f40",
+                    "surface-container": "#1e1e2e",
+                    "on-primary-container": "#094583",
+                    "error": "#ffb4ab",
+                    "on-secondary": "#2e2f41",
+                    "primary": "#b5cfff",
+                    "on-surface": "#e3e0f7",
+                    "background": "#121221",
+                    "surface-variant": "#333344",
+                    "secondary-container": "#444558",
+                    "tertiary-container": "#86c182",
+                    "on-primary-fixed-variant": "#0e4685",
+                    "outline": "#8d919b",
+                    "tertiary-fixed-dim": "#99d595",
+                    "on-primary-fixed": "#001b3c",
+                    "on-primary": "#003062",
+                    "surface-bright": "#383849",
+                    "primary-fixed": "#d5e3ff",
+                    "surface-container-highest": "#333344",
+                    "inverse-surface": "#e3e0f7"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "card_padding": "20px",
+                    "grid_gutter": "16px",
+                    "sidebar_width": "72px",
+                    "stack_gap": "8px",
+                    "container_padding": "24px"
+            },
+            "fontFamily": {
+                    "body-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "data-mono": ["JetBrains Mono"],
+                    "code-terminal": ["JetBrains Mono"],
+                    "headline-md": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "label-caps": ["Inter"]
+            },
+            "fontSize": {
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "data-mono": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                    "code-terminal": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+            }
+          }
+        }
+      }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .material-symbols-outlined {
+                font-family: 'Material Symbols Outlined';
+                font-weight: normal;
+                font-style: normal;
+                font-size: 24px;
+                line-height: 1;
+                letter-spacing: normal;
+                text-transform: none;
+                display: inline-block;
+                white-space: nowrap;
+                word-wrap: normal;
+                direction: ltr;
+                -webkit-font-feature-settings: 'liga';
+                -webkit-font-smoothing: antialiased;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            
+            /* Custom Table Styling for Telemetry */
+            .telemetry-table th {
+                @apply text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant pb-2 text-left;
+            }
+            .telemetry-table td {
+                @apply text-body-md font-body-md text-on-surface border-b border-surface-variant py-3;
+            }
+            .telemetry-table tr:last-child td {
+                @apply border-b-0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md flex h-screen overflow-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar Component -->
+<nav class="fixed left-0 top-0 h-full w-[72px] bg-surface-container-low dark:bg-surface-container-low border-r border-outline-variant dark:border-outline-variant flex flex-col items-center py-stack_gap gap-4 z-50">
+<!-- Header / Logo -->
+<div class="flex flex-col items-center gap-1 mb-4 mt-2">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-black text-title-sm">
+                L
+            </div>
+<span class="text-label-caps font-label-caps font-black text-primary dark:text-primary">Lynx</span>
+<span class="text-[9px] text-on-surface-variant leading-none">v2.4.0</span>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 flex flex-col gap-2 w-full px-2">
+<a class="flex items-center justify-center w-12 h-12 mx-auto text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all" href="#" title="Dashboard">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 mx-auto text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all" href="#" title="CPU">
+<span class="material-symbols-outlined" data-icon="memory">memory</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 mx-auto text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all" href="#" title="GPU">
+<span class="material-symbols-outlined" data-icon="videogame_asset">videogame_asset</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 mx-auto text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all" href="#" title="Memory">
+<span class="material-symbols-outlined" data-icon="sd_storage">sd_storage</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 mx-auto text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all" href="#" title="Storage">
+<span class="material-symbols-outlined" data-icon="storage">storage</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 mx-auto text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all" href="#" title="Network">
+<span class="material-symbols-outlined" data-icon="lan">lan</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 mx-auto text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all" href="#" title="Processes">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+</a>
+<!-- Python Manager (Packages equivalent, mapped semantically to active state) -->
+<a class="relative flex items-center justify-center w-12 h-12 mx-auto rounded-xl bg-secondary-container dark:bg-secondary-container text-primary dark:text-primary after:absolute after:left-0 after:w-1 after:h-8 after:bg-primary after:rounded-r-full Active: scale-90 transition-transform duration-150" href="#" title="Packages">
+<span class="material-symbols-outlined" data-icon="package">package</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 mx-auto text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all" href="#" title="Services">
+<span class="material-symbols-outlined" data-icon="settings_suggest">settings_suggest</span>
+</a>
+</div>
+<!-- Footer Actions -->
+<div class="mt-auto flex flex-col gap-2 mb-4 w-full px-2">
+<a class="flex items-center justify-center w-12 h-12 mx-auto text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all" href="#" title="Terminal">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+</a>
+<a class="flex items-center justify-center w-12 h-12 mx-auto text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary hover:bg-surface-variant dark:hover:bg-surface-variant rounded-xl transition-all" href="#" title="Help">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="ml-[72px] flex-1 flex flex-col h-full bg-background overflow-hidden relative">
+<!-- TopAppBar Component -->
+<header class="flex justify-between items-center w-full px-container_padding h-16 bg-surface dark:bg-surface border-b border-outline-variant dark:border-outline-variant z-40 shrink-0">
+<div class="flex items-center gap-4">
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-primary tracking-tight">Python Manager</h1>
+</div>
+<div class="flex items-center gap-4">
+<!-- Search -->
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="bg-surface-variant border-none rounded-full py-1.5 pl-10 pr-4 text-body-md text-on-surface focus:ring-1 focus:ring-primary w-64 outline-none placeholder:text-on-surface-variant/50" placeholder="Search packages..." type="text"/>
+</div>
+<!-- Trailing Actions -->
+<button class="w-10 h-10 rounded-full hover:bg-surface-variant dark:hover:bg-surface-variant transition-colors flex items-center justify-center text-on-surface-variant dark:text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full hover:bg-surface-variant dark:hover:bg-surface-variant transition-colors flex items-center justify-center text-on-surface-variant dark:text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<!-- Profile -->
+<div class="w-8 h-8 rounded-full bg-secondary-container ml-2 overflow-hidden border border-outline-variant shrink-0 cursor-pointer">
+<img alt="System Administrator Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDx7D7x5Qz3Dsuq8tfykgJoehLIc-zFGXzHbtN8LI9nlsE0r3iAn5VQg9Lc-CigeFBU8TaQN4juthCUTbCJw1r4-fF6X7NKSJrZM-ga-fRs82HQEwr4mMdljiEDR-RL39ky7ILHawRDiZT3DpgAHuu10pRTBoQZhCF4sgQqxPC_OY2tGF173xWR6UOWFAtBvQnTMkZOZiomBeeFnJ_LBwj8O0uksXgTz8vBsPo8_1ydukG1slh6U_3ymNNOGzNdyPmVOpHv9zKEY1MF"/>
+</div>
+</div>
+</header>
+<!-- Scrollable Canvas -->
+<main class="flex-1 overflow-y-auto p-container_padding">
+<div class="max-w-7xl mx-auto space-y-6">
+<!-- Telemetry Summary Cards (Bento Grid Style) -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-grid_gutter">
+<!-- Venvs Discovered -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding flex flex-col justify-between h-32 md:col-span-1">
+<div class="flex items-center justify-between">
+<span class="text-label-caps font-label-caps text-on-surface-variant tracking-wider uppercase">Discovered Venvs</span>
+<span class="material-symbols-outlined text-tertiary text-xl" data-icon="folder_managed">folder_managed</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-display-lg font-display-lg text-on-surface">14</span>
+<span class="text-body-md font-body-md text-on-surface-variant">environments</span>
+</div>
+</div>
+<!-- Disk Usage -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding flex flex-col justify-between h-32 md:col-span-1">
+<div class="flex items-center justify-between">
+<span class="text-label-caps font-label-caps text-on-surface-variant tracking-wider uppercase">Venv Disk Usage</span>
+<span class="material-symbols-outlined text-primary text-xl" data-icon="storage">storage</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-display-lg font-display-lg text-on-surface">4.2</span>
+<span class="text-body-md font-body-md text-on-surface-variant">GB</span>
+</div>
+</div>
+<!-- Global Packages Summary -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding flex flex-col justify-between h-32 md:col-span-1">
+<div class="flex items-center justify-between">
+<span class="text-label-caps font-label-caps text-on-surface-variant tracking-wider uppercase">Global Packages</span>
+<span class="material-symbols-outlined text-secondary text-xl" data-icon="public">public</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-display-lg font-display-lg text-on-surface">128</span>
+<span class="text-body-md font-body-md text-on-surface-variant">installed</span>
+</div>
+</div>
+<!-- System Default Python -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-card_padding flex flex-col justify-between h-32 md:col-span-1">
+<div class="flex items-center justify-between">
+<span class="text-label-caps font-label-caps text-on-surface-variant tracking-wider uppercase">System Default</span>
+<span class="material-symbols-outlined text-on-surface-variant text-xl" data-icon="code">code</span>
+</div>
+<div class="flex flex-col mt-auto">
+<span class="text-title-sm font-title-sm text-on-surface">Python 3.11.4</span>
+<span class="text-data-mono font-data-mono text-on-surface-variant text-xs mt-1">/usr/bin/python3</span>
+</div>
+</div>
+</section>
+<!-- Complex Asymmetric Layout for Venvs and Details -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-grid_gutter h-[600px]">
+<!-- Virtual Environments List (Spans 7 cols) -->
+<div class="xl:col-span-7 bg-surface-container rounded-xl border border-outline-variant flex flex-col overflow-hidden h-full">
+<div class="p-4 border-b border-outline-variant flex items-center justify-between bg-surface-container/50">
+<div>
+<h2 class="text-title-sm font-title-sm text-on-surface">Virtual Environments</h2>
+<p class="text-label-caps font-label-caps text-on-surface-variant mt-1">LOCATED IN /HOME/USER/PROJECTS</p>
+</div>
+<button class="bg-surface-variant text-on-surface hover:bg-surface-bright px-3 py-1.5 rounded text-body-md font-data-mono transition-colors border border-outline-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="refresh">refresh</span> Scan
+                            </button>
+</div>
+<div class="flex-1 overflow-y-auto scrollbar-hide">
+<table class="w-full telemetry-table">
+<thead class="bg-surface-container-low sticky top-0 z-10">
+<tr>
+<th class="pl-4 pt-3">Environment</th>
+<th class="pt-3">Python</th>
+<th class="pt-3">Size</th>
+<th class="pr-4 pt-3 text-right">Actions</th>
+</tr>
+</thead>
+<tbody>
+<!-- Active Row -->
+<tr class="bg-surface-variant/30 hover:bg-surface-variant/50 transition-colors cursor-pointer group">
+<td class="pl-4">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-tertiary ring-4 ring-tertiary/20"></div>
+<div>
+<div class="text-on-surface font-semibold">lynx-backend-env</div>
+<div class="text-data-mono font-data-mono text-on-surface-variant text-xs opacity-70">~/projects/lynx/.venv</div>
+</div>
+</div>
+</td>
+<td>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-data-mono bg-surface-variant text-primary border border-outline-variant">3.10.12</span>
+</td>
+<td class="text-data-mono font-data-mono">842 MB</td>
+<td class="pr-4 text-right">
+<button class="opacity-0 group-hover:opacity-100 text-error hover:text-on-error bg-error-container/20 hover:bg-error-container px-2 py-1 rounded transition-all text-xs font-data-mono border border-error/30">
+                                                Clean
+                                            </button>
+</td>
+</tr>
+<!-- Inactive Rows -->
+<tr class="hover:bg-surface-variant/50 transition-colors cursor-pointer group">
+<td class="pl-4">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+<div>
+<div class="text-on-surface">data-science-env</div>
+<div class="text-data-mono font-data-mono text-on-surface-variant text-xs opacity-70">~/projects/ml-model/venv</div>
+</div>
+</div>
+</td>
+<td>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-data-mono bg-surface-variant text-primary border border-outline-variant">3.9.16</span>
+</td>
+<td class="text-data-mono font-data-mono">1.2 GB</td>
+<td class="pr-4 text-right">
+<button class="opacity-0 group-hover:opacity-100 text-error hover:text-on-error bg-error-container/20 hover:bg-error-container px-2 py-1 rounded transition-all text-xs font-data-mono border border-error/30">
+                                                Clean
+                                            </button>
+</td>
+</tr>
+<tr class="hover:bg-surface-variant/50 transition-colors cursor-pointer group">
+<td class="pl-4">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+<div>
+<div class="text-on-surface">web-scraper-env</div>
+<div class="text-data-mono font-data-mono text-on-surface-variant text-xs opacity-70">~/scripts/scraper/venv</div>
+</div>
+</div>
+</td>
+<td>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-data-mono bg-surface-variant text-primary border border-outline-variant">3.11.4</span>
+</td>
+<td class="text-data-mono font-data-mono">320 MB</td>
+<td class="pr-4 text-right">
+<button class="opacity-0 group-hover:opacity-100 text-error hover:text-on-error bg-error-container/20 hover:bg-error-container px-2 py-1 rounded transition-all text-xs font-data-mono border border-error/30">
+                                                Clean
+                                            </button>
+</td>
+</tr>
+<tr class="hover:bg-surface-variant/50 transition-colors cursor-pointer group">
+<td class="pl-4">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+<div>
+<div class="text-on-surface">old-django-project</div>
+<div class="text-data-mono font-data-mono text-on-surface-variant text-xs opacity-70">~/archive/django-app/.venv</div>
+</div>
+</div>
+</td>
+<td>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-data-mono bg-surface-variant text-outline border border-outline-variant">3.8.5</span>
+</td>
+<td class="text-data-mono font-data-mono">650 MB</td>
+<td class="pr-4 text-right">
+<button class="opacity-0 group-hover:opacity-100 text-error hover:text-on-error bg-error-container/20 hover:bg-error-container px-2 py-1 rounded transition-all text-xs font-data-mono border border-error/30">
+                                                Clean
+                                            </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Selected Environment Details (Spans 5 cols) -->
+<div class="xl:col-span-5 bg-surface-container rounded-xl border border-outline-variant flex flex-col overflow-hidden h-full shadow-[0_12px_24px_rgba(0,0,0,0.25)] relative">
+<!-- Header Detail -->
+<div class="p-card_padding border-b border-outline-variant bg-gradient-to-br from-surface-container to-surface-container-low">
+<div class="flex items-start justify-between mb-4">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(161,221,156,0.5)]"></div>
+<h3 class="text-title-sm font-title-sm text-primary">lynx-backend-env</h3>
+</div>
+<p class="text-data-mono font-data-mono text-on-surface-variant text-xs truncate w-64" title="~/projects/lynx/.venv">~/projects/lynx/.venv</p>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface" title="Open Terminal Here">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+</button>
+</div>
+<div class="flex gap-4">
+<div class="bg-surface-variant rounded px-2 py-1 border border-outline-variant text-center">
+<div class="text-[10px] text-on-surface-variant font-label-caps uppercase tracking-wider mb-0.5">Packages</div>
+<div class="text-body-md font-data-mono text-on-surface">42</div>
+</div>
+<div class="bg-surface-variant rounded px-2 py-1 border border-outline-variant text-center">
+<div class="text-[10px] text-on-surface-variant font-label-caps uppercase tracking-wider mb-0.5">Size</div>
+<div class="text-body-md font-data-mono text-on-surface">842 MB</div>
+</div>
+</div>
+</div>
+<!-- Packages List -->
+<div class="p-2 border-b border-outline-variant bg-surface-container-low">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm" data-icon="filter_list">filter_list</span>
+<input class="w-full bg-surface border border-outline-variant rounded py-1 pl-8 pr-2 text-sm text-on-surface focus:border-primary outline-none focus:ring-1 focus:ring-primary font-data-mono h-8" placeholder="Filter installed packages..." type="text"/>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto scrollbar-hide bg-[#11111b] p-4 font-code-terminal text-code-terminal">
+<!-- Terminal-like output for packages -->
+<div class="space-y-1">
+<div class="flex justify-between hover:bg-surface-variant/30 px-1 rounded">
+<span class="text-tertiary">fastapi</span>
+<span class="text-on-surface-variant">0.103.1</span>
+</div>
+<div class="flex justify-between hover:bg-surface-variant/30 px-1 rounded">
+<span class="text-tertiary">uvicorn</span>
+<span class="text-on-surface-variant">0.23.2</span>
+</div>
+<div class="flex justify-between hover:bg-surface-variant/30 px-1 rounded">
+<span class="text-tertiary">pydantic</span>
+<span class="text-on-surface-variant">2.3.0</span>
+</div>
+<div class="flex justify-between hover:bg-surface-variant/30 px-1 rounded">
+<span class="text-tertiary">psutil</span>
+<span class="text-on-surface-variant">5.9.5</span>
+</div>
+<div class="flex justify-between hover:bg-surface-variant/30 px-1 rounded">
+<span class="text-tertiary">SQLAlchemy</span>
+<span class="text-on-surface-variant">2.0.20</span>
+</div>
+<div class="flex justify-between hover:bg-surface-variant/30 px-1 rounded">
+<span class="text-tertiary">alembic</span>
+<span class="text-on-surface-variant">1.12.0</span>
+</div>
+<div class="flex justify-between hover:bg-surface-variant/30 px-1 rounded">
+<span class="text-on-surface opacity-70">typing_extensions</span>
+<span class="text-on-surface-variant opacity-70">4.7.1</span>
+</div>
+<div class="flex justify-between hover:bg-surface-variant/30 px-1 rounded">
+<span class="text-on-surface opacity-70">starlette</span>
+<span class="text-on-surface-variant opacity-70">0.27.0</span>
+</div>
+<div class="flex justify-between hover:bg-surface-variant/30 px-1 rounded">
+<span class="text-on-surface opacity-70">click</span>
+<span class="text-on-surface-variant opacity-70">8.1.7</span>
+</div>
+<div class="flex justify-between hover:bg-surface-variant/30 px-1 rounded">
+<span class="text-on-surface opacity-70">h11</span>
+<span class="text-on-surface-variant opacity-70">0.14.0</span>
+</div>
+<div class="flex justify-between hover:bg-surface-variant/30 px-1 rounded">
+<span class="text-on-surface opacity-70">pip</span>
+<span class="text-on-surface-variant opacity-70">23.2.1</span>
+</div>
+<div class="flex justify-between hover:bg-surface-variant/30 px-1 rounded">
+<span class="text-on-surface opacity-70">setuptools</span>
+<span class="text-on-surface-variant opacity-70">68.1.2</span>
+</div>
+</div>
+</div>
+<div class="p-3 border-t border-outline-variant bg-surface-container flex justify-end gap-2">
+<button class="bg-surface text-on-surface border border-outline-variant hover:bg-surface-variant px-3 py-1.5 rounded text-body-md font-body-md transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span> Install
+                            </button>
+<button class="bg-error-container text-on-error-container hover:bg-error px-3 py-1.5 rounded text-body-md font-body-md transition-colors flex items-center gap-2 border border-error/50">
+<span class="material-symbols-outlined text-sm" data-icon="delete">delete</span> Destroy Venv
+                            </button>
+</div>
+</div>
+</div>
+<!-- Global Packages Section (Glassmorphism inspired card) -->
+<section class="bg-surface-container/80 backdrop-blur-sm rounded-xl border border-outline-variant overflow-hidden mb-8">
+<div class="p-4 border-b border-outline-variant flex items-center justify-between">
+<div>
+<h2 class="text-title-sm font-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="public">public</span>
+                                Global Packages
+                            </h2>
+<p class="text-body-md text-on-surface-variant mt-1">Packages installed at system level (/usr/local/lib/python3.11)</p>
+</div>
+<div class="text-label-caps font-label-caps text-error bg-error-container/20 px-2 py-1 rounded border border-error/30">
+                            WARNING: System Mod
+                        </div>
+</div>
+<div class="p-card_padding grid grid-cols-2 md:grid-cols-4 gap-4 bg-surface-container-lowest/50">
+<!-- Global Package Items -->
+<div class="flex flex-col p-3 rounded-lg border border-outline-variant bg-surface hover:border-primary/50 transition-colors">
+<span class="text-body-md font-data-mono font-semibold text-on-surface">pip</span>
+<span class="text-xs font-data-mono text-on-surface-variant mt-1">23.2.1</span>
+</div>
+<div class="flex flex-col p-3 rounded-lg border border-outline-variant bg-surface hover:border-primary/50 transition-colors">
+<span class="text-body-md font-data-mono font-semibold text-on-surface">virtualenv</span>
+<span class="text-xs font-data-mono text-on-surface-variant mt-1">20.24.3</span>
+</div>
+<div class="flex flex-col p-3 rounded-lg border border-outline-variant bg-surface hover:border-primary/50 transition-colors">
+<span class="text-body-md font-data-mono font-semibold text-on-surface">poetry</span>
+<span class="text-xs font-data-mono text-on-surface-variant mt-1">1.6.1</span>
+</div>
+<div class="flex flex-col p-3 rounded-lg border border-outline-variant bg-surface hover:border-primary/50 transition-colors">
+<span class="text-body-md font-data-mono font-semibold text-on-surface">black</span>
+<span class="text-xs font-data-mono text-on-surface-variant mt-1">23.9.1</span>
+</div>
+<div class="flex flex-col p-3 rounded-lg border border-outline-variant bg-surface hover:border-primary/50 transition-colors">
+<span class="text-body-md font-data-mono font-semibold text-on-surface">flake8</span>
+<span class="text-xs font-data-mono text-on-surface-variant mt-1">6.1.0</span>
+</div>
+<div class="flex flex-col p-3 rounded-lg border border-outline-variant bg-surface hover:border-primary/50 transition-colors">
+<span class="text-body-md font-data-mono font-semibold text-on-surface">pytest</span>
+<span class="text-xs font-data-mono text-on-surface-variant mt-1">7.4.0</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

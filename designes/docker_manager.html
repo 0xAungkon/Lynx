@@ -1,0 +1,375 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Lynx - Docker Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#ffdad6",
+                        "surface-dim": "#121221",
+                        "surface-container-high": "#292839",
+                        "on-tertiary-container": "#174f1e",
+                        "on-surface": "#e3e0f7",
+                        "outline": "#8d919b",
+                        "on-error": "#690005",
+                        "primary-container": "#89b4fa",
+                        "on-tertiary": "#00390c",
+                        "secondary": "#c5c4dc",
+                        "primary-fixed": "#d5e3ff",
+                        "on-background": "#e3e0f7",
+                        "surface": "#121221",
+                        "secondary-fixed": "#e1e0f8",
+                        "outline-variant": "#424750",
+                        "on-secondary-fixed-variant": "#444558",
+                        "on-tertiary-fixed": "#002205",
+                        "on-secondary-fixed": "#191a2b",
+                        "on-surface-variant": "#c3c6d2",
+                        "background": "#121221",
+                        "tertiary-fixed-dim": "#99d595",
+                        "tertiary": "#a1dd9c",
+                        "secondary-container": "#444558",
+                        "error-container": "#93000a",
+                        "surface-container-low": "#1a1a2a",
+                        "tertiary-fixed": "#b4f2af",
+                        "primary": "#b5cfff",
+                        "inverse-primary": "#305f9f",
+                        "on-secondary-container": "#b4b3ca",
+                        "primary-fixed-dim": "#a8c8ff",
+                        "on-primary-fixed": "#001b3c",
+                        "surface-variant": "#333344",
+                        "surface-container-highest": "#333344",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed-variant": "#19511f",
+                        "on-primary": "#003062",
+                        "on-primary-container": "#094583",
+                        "inverse-on-surface": "#2f2f40",
+                        "on-secondary": "#2e2f41",
+                        "on-primary-fixed-variant": "#0e4685",
+                        "tertiary-container": "#86c182",
+                        "surface-container": "#1e1e2e",
+                        "surface-container-lowest": "#0d0d1c",
+                        "inverse-surface": "#e3e0f7",
+                        "secondary-fixed-dim": "#c5c4dc",
+                        "surface-tint": "#a8c8ff",
+                        "surface-bright": "#383849"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "card_padding": "20px",
+                        "stack_gap": "8px",
+                        "sidebar_width": "72px",
+                        "container_padding": "24px",
+                        "grid_gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "code-terminal": ["JetBrains Mono"],
+                        "title-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "data-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "code-terminal": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "data-mono": ["13px", { "lineHeight": "18px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex font-body-md text-body-md overflow-x-hidden">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full w-[72px] bg-surface border-r border-outline-variant flex flex-col items-center py-4 gap-stack_gap z-50">
+<div class="mb-6 font-headline-md text-headline-md font-bold text-primary flex flex-col items-center gap-1 cursor-pointer">
+<span class="material-symbols-outlined text-[32px] fill">memory</span>
+<span class="font-label-caps text-label-caps tracking-widest uppercase">Lynx</span>
+</div>
+<div class="flex flex-col gap-2 w-full px-2">
+<!-- Navigation Items -->
+<!-- Dashboard -->
+<button aria-label="Dashboard" class="w-full aspect-square flex flex-col items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors group relative">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="absolute left-16 bg-surface-container-high text-on-surface font-label-caps text-label-caps px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Dashboard</span>
+</button>
+<!-- Services (Active for Docker Manager context) -->
+<button aria-label="Services" class="w-full aspect-square flex flex-col items-center justify-center rounded-lg text-primary bg-surface-variant border-l-4 border-primary transition-colors group relative">
+<span class="material-symbols-outlined fill">settings_suggest</span>
+<span class="absolute left-16 bg-surface-container-high text-on-surface font-label-caps text-label-caps px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Docker / Services</span>
+</button>
+<!-- Logs -->
+<button aria-label="Logs" class="w-full aspect-square flex flex-col items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors group relative">
+<span class="material-symbols-outlined">article</span>
+<span class="absolute left-16 bg-surface-container-high text-on-surface font-label-caps text-label-caps px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Logs</span>
+</button>
+<!-- Packages -->
+<button aria-label="Packages" class="w-full aspect-square flex flex-col items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors group relative">
+<span class="material-symbols-outlined">package_2</span>
+<span class="absolute left-16 bg-surface-container-high text-on-surface font-label-caps text-label-caps px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Packages</span>
+</button>
+</div>
+<div class="mt-auto flex flex-col gap-2 w-full px-2">
+<!-- Settings -->
+<button aria-label="Settings" class="w-full aspect-square flex flex-col items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors group relative">
+<span class="material-symbols-outlined">settings</span>
+<span class="absolute left-16 bg-surface-container-high text-on-surface font-label-caps text-label-caps px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">Settings</span>
+</button>
+<!-- User Avatar -->
+<div class="w-full aspect-square flex items-center justify-center mt-2 cursor-pointer relative group">
+<div class="w-10 h-10 rounded-full bg-surface-variant border border-outline-variant flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-primary">person</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 ml-[72px] flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-[72px] h-16 bg-surface-container border-b border-outline-variant flex justify-between items-center px-container_padding z-40">
+<div class="flex items-center gap-4">
+<h1 class="font-title-sm text-title-sm text-on-surface">Docker Engine</h1>
+<span class="bg-tertiary-container text-on-tertiary-container font-label-caps text-label-caps px-2 py-1 rounded-full flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
+                    Running v24.0.5
+                </span>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative focus-within:ring-1 focus-within:ring-primary rounded-lg">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface border border-outline-variant rounded-lg pl-9 pr-4 py-1.5 text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary w-64 transition-all" placeholder="Search containers..." type="text">
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined">terminal</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-variant transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Dashboard Canvas -->
+<main class="flex-1 pt-24 px-container_padding pb-container_padding flex flex-col gap-grid_gutter overflow-y-auto">
+<!-- Bento Grid: Overview & Actions -->
+<div class="grid grid-cols-12 gap-grid_gutter">
+<!-- System Resource Widget (Docker Focus) -->
+<div class="col-span-12 md:col-span-8 lg:col-span-6 bg-surface-container border border-outline-variant rounded-xl p-card_padding flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<h2 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">monitoring</span>
+                            Engine Resources
+                        </h2>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Real-time</span>
+</div>
+<div class="flex gap-6 h-full">
+<!-- CPU Ring -->
+<div class="flex-1 flex flex-col items-center justify-center">
+<div class="relative w-24 h-24 flex items-center justify-center mb-2">
+<svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+<path class="text-surface-variant" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="25, 100" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center font-data-mono text-data-mono text-on-surface">
+                                    25%
+                                </div>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">CPU Usage</span>
+</div>
+<!-- RAM Ring -->
+<div class="flex-1 flex flex-col items-center justify-center">
+<div class="relative w-24 h-24 flex items-center justify-center mb-2">
+<svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+<path class="text-surface-variant" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-tertiary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="60, 100" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center font-data-mono text-data-mono text-on-surface">
+                                    4.2GB
+                                </div>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">RAM Allocated</span>
+</div>
+</div>
+</div>
+<!-- Stats Summary -->
+<div class="col-span-12 md:col-span-4 lg:col-span-3 flex flex-col gap-grid_gutter">
+<div class="bg-surface-container border border-outline-variant rounded-xl p-card_padding flex-1 flex flex-col justify-center">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-8 h-8 rounded bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">play_arrow</span>
+</div>
+<span class="font-title-sm text-title-sm text-on-surface">Running</span>
+</div>
+<div class="font-display-lg text-display-lg text-tertiary">12</div>
+</div>
+<div class="bg-surface-container border border-outline-variant rounded-xl p-card_padding flex-1 flex flex-col justify-center">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-8 h-8 rounded bg-error-container/20 flex items-center justify-center text-error">
+<span class="material-symbols-outlined">stop</span>
+</div>
+<span class="font-title-sm text-title-sm text-on-surface">Exited</span>
+</div>
+<div class="font-display-lg text-display-lg text-error">3</div>
+</div>
+</div>
+<!-- Quick Actions / Image Pull -->
+<div class="col-span-12 lg:col-span-3 bg-surface-container border border-outline-variant rounded-xl p-card_padding flex flex-col">
+<h2 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">cloud_download</span>
+                        Pull Image
+                    </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">Fetch latest from Docker Hub</p>
+<div class="mt-auto flex flex-col gap-3">
+<div class="relative">
+<input class="w-full bg-surface border border-outline-variant rounded-lg px-3 py-2 text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-all" placeholder="e.g. nginx:latest" type="text">
+</div>
+<button class="w-full bg-primary-container text-on-primary-container font-label-caps text-label-caps py-2 rounded-lg hover:bg-primary transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">download</span> PULL
+                        </button>
+</div>
+</div>
+</div>
+<!-- Active Containers Data Table -->
+<div class="bg-surface-container border border-outline-variant rounded-xl flex flex-col overflow-hidden">
+<div class="p-card_padding border-b border-outline-variant flex justify-between items-center bg-surface-container-high/50">
+<h2 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">view_list</span>
+                        Containers
+                    </h2>
+<div class="flex gap-2">
+<button class="px-3 py-1 border border-outline-variant rounded text-on-surface-variant font-label-caps text-label-caps hover:text-primary hover:border-primary transition-colors">ALL</button>
+<button class="px-3 py-1 border border-primary bg-primary/10 rounded text-primary font-label-caps text-label-caps transition-colors">RUNNING</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant bg-surface-container-lowest font-label-caps text-label-caps text-on-surface-variant uppercase">
+<th class="p-4 font-normal">Status</th>
+<th class="p-4 font-normal">Name</th>
+<th class="p-4 font-normal">Image</th>
+<th class="p-4 font-normal">Ports</th>
+<th class="p-4 font-normal">Actions</th>
+</tr>
+</thead>
+<tbody class="font-data-mono text-data-mono text-on-surface divide-y divide-outline-variant">
+<!-- Container Row: Running -->
+<tr class="hover:bg-surface-variant/50 transition-colors group">
+<td class="p-4">
+<div class="w-3 h-3 rounded-full bg-tertiary shadow-[0_0_8px_rgba(161,221,156,0.6)]"></div>
+</td>
+<td class="p-4 font-title-sm text-title-sm text-primary">web_proxy_nginx</td>
+<td class="p-4 text-on-surface-variant">nginx:alpine</td>
+<td class="p-4 text-on-surface-variant">80:80, 443:443</td>
+<td class="p-4">
+<div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-tertiary hover:bg-surface transition-colors" title="Restart">
+<span class="material-symbols-outlined text-sm">restart_alt</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-surface transition-colors" title="Stop">
+<span class="material-symbols-outlined text-sm">stop</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface transition-colors" title="Logs">
+<span class="material-symbols-outlined text-sm">subject</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Container Row: Stopped -->
+<tr class="hover:bg-surface-variant/50 transition-colors group">
+<td class="p-4">
+<div class="w-3 h-3 rounded-full bg-error border border-error-container"></div>
+</td>
+<td class="p-4 font-title-sm text-title-sm text-on-surface-variant line-through opacity-70">old_db_backup</td>
+<td class="p-4 text-on-surface-variant opacity-70">postgres:13</td>
+<td class="p-4 text-on-surface-variant opacity-70">-</td>
+<td class="p-4">
+<div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-tertiary hover:bg-surface transition-colors" title="Start">
+<span class="material-symbols-outlined text-sm">play_arrow</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-surface transition-colors" title="Remove">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Bottom Section: Images & Networks Split -->
+<div class="grid grid-cols-12 gap-grid_gutter mt-4">
+<!-- Images List -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container border border-outline-variant rounded-xl p-card_padding flex flex-col">
+<div class="flex justify-between items-center mb-4 pb-2 border-b border-outline-variant">
+<h2 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">layers</span>
+                            Local Images
+                        </h2>
+<button class="text-error border border-error-container bg-error-container/10 px-3 py-1 rounded font-label-caps text-label-caps hover:bg-error-container/30 transition-colors">
+                            PRUNE UNUSED
+                        </button>
+</div>
+<div class="flex flex-col gap-2 font-data-mono text-data-mono text-on-surface">
+<div class="flex justify-between items-center p-2 rounded hover:bg-surface-variant transition-colors">
+<div class="flex flex-col">
+<span class="text-primary">node</span>
+<span class="text-label-caps text-on-surface-variant">18-alpine</span>
+</div>
+<span class="text-on-surface-variant">175 MB</span>
+</div>
+<div class="flex justify-between items-center p-2 rounded hover:bg-surface-variant transition-colors">
+<div class="flex flex-col">
+<span class="text-primary">redis</span>
+<span class="text-label-caps text-on-surface-variant">latest</span>
+</div>
+<span class="text-on-surface-variant">117 MB</span>
+</div>
+</div>
+</div>
+<!-- Networks & Volumes -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-grid_gutter">
+<div class="bg-surface-container border border-outline-variant rounded-xl p-card_padding flex-1">
+<h2 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary">lan</span>
+                            Networks
+                        </h2>
+<div class="flex flex-col gap-1 font-data-mono text-data-mono text-on-surface-variant">
+<div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> bridge</div>
+<div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> host</div>
+<div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span> lynx_internal</div>
+</div>
+</div>
+</div>
+</div><div class="bg-surface-container border border-outline-variant rounded-xl flex flex-col overflow-hidden mt-4"><div class="p-card_padding border-b border-outline-variant flex justify-between items-center bg-surface-container-high/50"><h2 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-primary">database</span> Volumes</h2><button class="flex items-center gap-1 text-error border border-error-container bg-error-container/10 px-3 py-1 rounded font-label-caps text-label-caps hover:bg-error-container/30 transition-colors mr-2"><span class="material-symbols-outlined text-sm">cleaning_services</span> PRUNE UNUSED</button><button class="text-on-surface-variant border border-outline-variant px-3 py-1 rounded font-label-caps text-label-caps hover:text-primary hover:border-primary transition-colors">CREATE VOLUME</button></div><div class="overflow-x-auto"><table class="w-full text-left border-collapse"><thead><tr class="border-b border-outline-variant bg-surface-container-lowest font-label-caps text-label-caps text-on-surface-variant uppercase"><th class="p-4 font-normal">Volume Name</th><th class="p-4 font-normal">Mount Path</th><th class="p-4 font-normal">Size</th><th class="p-4 font-normal">Actions</th></tr></thead><tbody class="font-data-mono text-data-mono text-on-surface divide-y divide-outline-variant"><tr class="hover:bg-surface-variant/50 transition-colors group"><td class="p-4 text-primary">nginx_config</td><td class="p-4 text-on-surface-variant">/etc/nginx</td><td class="p-4 text-on-surface-variant">12 KB</td><td class="p-4"><div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"><button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-surface transition-colors"><span class="material-symbols-outlined text-sm">delete</span></button></div></td></tr><tr class="hover:bg-surface-variant/50 transition-colors group"><td class="p-4 text-primary">postgres_data</td><td class="p-4 text-on-surface-variant">/var/lib/postgresql/data</td><td class="p-4 text-on-surface-variant">1.2 GB</td><td class="p-4"><div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"><button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-surface transition-colors"><span class="material-symbols-outlined text-sm">delete</span></button></div></td></tr><tr class="hover:bg-surface-variant/50 transition-colors group"><td class="p-4 text-primary">redis_store</td><td class="p-4 text-on-surface-variant">/data</td><td class="p-4 text-on-surface-variant">450 MB</td><td class="p-4"><div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"><button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-surface transition-colors"><span class="material-symbols-outlined text-sm">delete</span></button></div></td></tr><tr class="hover:bg-surface-variant/50 transition-colors group"><td class="p-4 text-primary">app_logs</td><td class="p-4 text-on-surface-variant">/var/log/app</td><td class="p-4 text-on-surface-variant">85 MB</td><td class="p-4"><div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"><button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:text-error hover:bg-surface transition-colors"><span class="material-symbols-outlined text-sm">delete</span></button></div></td></tr></tbody></table></div></div>
+</main>
+</div>
+
+
+</body></html>
